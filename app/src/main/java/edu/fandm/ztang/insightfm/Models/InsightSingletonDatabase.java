@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +40,11 @@ public class InsightSingletonDatabase {
     private ArrayList<InsightDatabaseModel.Office> offices;
     private ArrayList<InsightDatabaseModel.Department> departments;
     private ArrayList<InsightDatabaseModel.Instructor> instructors;
+
+    //Create some instance for google map related variables
+    private Map<String, LatLng>  mapMarkers = new Hashtable<String, LatLng>();
+    private Map<String, String>  mapMarkersFullName = new Hashtable<>();
+
 
     //Create some instance for data-searching
     private InfoSearchModel.Trie courseTitleTrie;
@@ -74,6 +81,11 @@ public class InsightSingletonDatabase {
         buildingTrie = new InfoSearchModel.Trie(false, -1);
         instructorTrie = new InfoSearchModel.Trie(false, -1);
 
+
+        //initialize mapMarkerLat;
+        setMapLAT();
+        setMapMarkersFullName();
+
         //create course info database
         getCourseInfo();
 
@@ -103,10 +115,18 @@ public class InsightSingletonDatabase {
         return courseTitleTrie.searchAllPossibleResult(courseTitle);
     }
 
+    
+
 
     //////////////////////////////
     /////getter methods
     //////////////////////////////
+
+
+    public ArrayList<InsightDatabaseModel.Building> getBuildings() {
+        return buildings;
+    }
+
     public InsightDatabaseModel.Building getBuilding(int accessCode){
         return buildings.get(accessCode);
     }
@@ -162,6 +182,12 @@ public class InsightSingletonDatabase {
                 InfoSearchModel.TrieNode tempNode = buildingTrie.searchNode(newCourseInfoList[4]);
                 if( tempNode ==  null){
                     currentBuilding = new InsightDatabaseModel.Building(newCourseInfoList[4]);
+
+                    //check if there is corresponding location for the building
+                    if(mapMarkers.get(newCourseInfoList[4]) != null){
+                        currentBuilding.setBuildingLocation(mapMarkers.get(newCourseInfoList[4]));
+                    }
+
                     buildingTrie.insert(newCourseInfoList[4], currentBuildingIndex);
                     buildings.add(currentBuilding);
                     currentBuildingIndex += 1;
@@ -220,6 +246,10 @@ public class InsightSingletonDatabase {
         }
     }
 
+    public Map<String, LatLng> getMapMarkerLATs(){
+        return mapMarkers;
+    }
+
     private void setupDepartURL(){
 
         departURL = new Hashtable<String, String>();
@@ -264,4 +294,74 @@ public class InsightSingletonDatabase {
         departURL.put("TDF", "tdf");
         departURL.put("WGS", "wgs");
     }
+
+    private void setMapLAT(){
+
+        LatLng ADA_LAT = new LatLng(40.046112078131216,-76.31941705942154);
+        LatLng BAR_LAT = new LatLng(40.046917990535796,-76.31917834281921);
+        LatLng GOE_LAT = new LatLng(40.04497145443324,-76.32026731967926);
+        LatLng HAC_LAT = new LatLng(40.04809450914126,-76.32054224610329);
+        LatLng HAR_LAT = new LatLng(40.04785838574442,-76.31999775767326);
+        LatLng HER_LAT = new LatLng(40.04395299145577,-76.3206535577774);
+        LatLng HUE_LAT = new LatLng(40.044478651666594,-76.32042825222015);
+        LatLng KAU_LAT = new LatLng(40.04779678820205,-76.32056638598442);
+        LatLng KEI_LAT = new LatLng(40.04557923960607,-76.31954848766327);
+        LatLng LSP_LAT = new LatLng(40.04919298549468,-76.32019221782684);
+        LatLng ORT_LAT = new LatLng(40.04828135403209,-76.31578803062439);
+        LatLng ROS_LAT = new LatLng(40.047593679210486,-76.31902545690536);
+        LatLng SCC_LAT = new LatLng(40.04737603359178,-76.31957799196243);
+        LatLng STA_LAT = new LatLng(40.046096674063996,-76.31949618458748);
+        LatLng WRH_LAT = new LatLng(40.04853595503695,-76.32047116756439);
+
+        //TODO complete other buildings
+
+
+
+        mapMarkers.put("ADA", ADA_LAT);
+        mapMarkers.put("BAR", BAR_LAT);
+        mapMarkers.put("GOE", GOE_LAT);
+        mapMarkers.put("HAC", HAC_LAT);
+        mapMarkers.put("HAR", HAR_LAT);
+        mapMarkers.put("HER", HER_LAT);
+        mapMarkers.put("HUE", HUE_LAT);
+        mapMarkers.put("KAU", KAU_LAT);
+        mapMarkers.put("KEI", KEI_LAT);
+        mapMarkers.put("LSP", LSP_LAT);
+        mapMarkers.put("ORT", ORT_LAT);
+        mapMarkers.put("ROS", ROS_LAT);
+        mapMarkers.put("SCC", SCC_LAT);
+        mapMarkers.put("STA", STA_LAT);
+        mapMarkers.put("WRH", WRH_LAT);
+    }
+
+    private void setMapMarkersFullName(){
+
+        mapMarkersFullName.put("ADA200",	"Adams Auditorium, located in Hackman Hall");
+        mapMarkersFullName.put("APP",	"Appel (use east entrance to Appel Infirmary building)");
+        mapMarkersFullName.put("BARGAU",	"Barshinger Center, Gault Room");
+        mapMarkersFullName.put("BARSTA",	"Barshinger Center, Stage");
+        mapMarkersFullName.put("BON",	"Bonchek College House");
+        mapMarkersFullName.put("BRO",	"Brooks College House");
+        mapMarkersFullName.put("GOE",	"Goethean Hall");
+        mapMarkersFullName.put( "HAC",	"Hackman Hall");
+        mapMarkersFullName.put( "HAR",	"Harris Center");
+        mapMarkersFullName.put("HER",	"Herman Arts");
+        mapMarkersFullName.put("JIC",	"Joseph International Center");
+        mapMarkersFullName.put("KAU",	"Kaufman Lecture Hall");
+        mapMarkersFullName.put("KEI",	"Keiper Liberal Arts");
+        mapMarkersFullName.put("KLE",	"Klehr Center");
+        mapMarkersFullName.put( "LSP",	"Barshinger Life Sciences & Philosophy Building");
+        mapMarkersFullName.put("NEW",	"New College House");
+        mapMarkersFullName.put( "ORT",	"Other Room Theatre (715 North Pine Street)");
+        mapMarkersFullName.put("ROS",	"Roschel Performing Arts Center");
+        mapMarkersFullName.put("SCC",	"Steinman College Center");
+        mapMarkersFullName.put("SFL",	"Shadek-Fackenthal Library");
+        mapMarkersFullName.put("STA",	"Stager Hall");
+        mapMarkersFullName.put("WAR",	"Ware College House");
+        mapMarkersFullName.put("WEI",	"Weis College House");
+        mapMarkersFullName.put("WOH",	"Wohlsen Center");
+        mapMarkersFullName.put("WRH",	"Writer's House");
+
+    }
+
 }

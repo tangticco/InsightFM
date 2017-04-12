@@ -37,7 +37,8 @@
         android:paddingBottom="26dp"
         android:alpha="0.5"
         android:hint="Enter Your Keyword"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        android:visibility="gone"/>
 
 
     <ListView
@@ -46,7 +47,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/searchbar"
-
+        android:visibility="gone"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_marginStart="21dp"
@@ -55,6 +56,21 @@
         android:id="@+id/searchResult"
         android:alpha="0.7"
         android:background="@color/white"/>
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.5"
+        android:visibility="visible"
+        android:text="FM"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/searchResult"
+        android:layout_alignStart="@+id/searchResult"
+        android:layout_marginLeft="334dp"
+        android:layout_marginStart="334dp"
+        android:onClick="showSearchBar"/>
+
 
 
 </RelativeLayout>

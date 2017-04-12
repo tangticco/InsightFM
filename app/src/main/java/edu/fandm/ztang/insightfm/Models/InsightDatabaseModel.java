@@ -5,6 +5,8 @@ import android.content.res.AssetManager;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -49,13 +51,20 @@ public class InsightDatabaseModel {
      * A class that implement the information structure of a building
      */
     public static class Building extends FMResource{
-
+        //Building class attributes
         private String buildingName;
+        private String buildingDescription;
+        private LatLng buildingLocation;
+
+        //Building class values
         private ArrayList<Floor> floors;
+        private ArrayList<Department> departments;
+
 
         public Building(String BUILDINGNAME){
             buildingName = BUILDINGNAME;
             floors = new ArrayList<>();
+            departments = new ArrayList<>();
             this.setClassType("Building");
             this.setResourceTitle(buildingName);
         }
@@ -67,20 +76,20 @@ public class InsightDatabaseModel {
             return buildingName;
         }
 
-        public String getFloorsList(){
-            if(floors.isEmpty()){
-                return "There is no floor in this building";
-            }else{
-                for(int i = 0; i < floors.size(); i++){
-                    //TODO print out all floor's name
-                }
-                return "";
-            }
-
+        public ArrayList<Floor> getFloors() {
+            return floors;
         }
 
-        public Floor getFloor(int index){
-            return floors.get(index);
+        public LatLng getBuildingLocation() {
+            return buildingLocation;
+        }
+
+        public String getBuildingDescription() {
+            return buildingDescription;
+        }
+
+        public ArrayList<Department> getDepartments() {
+            return departments;
         }
 
         ////////////////////////////////////
@@ -90,8 +99,17 @@ public class InsightDatabaseModel {
             floors.add(newFloor);
         }
 
+        public void addDepartment(Department newDeparment){
+            departments.add(newDeparment);
+        }
 
+        public void setBuildingLocation(LatLng buildingLocation) {
+            this.buildingLocation = buildingLocation;
+        }
 
+        public void setBuildingDescription(String buildingDescription) {
+            this.buildingDescription = buildingDescription;
+        }
     }
 
     /**
@@ -106,6 +124,7 @@ public class InsightDatabaseModel {
         private ArrayList<Classroom> classrooms;
         private ArrayList<Office> offices;
         private String floorName;
+
 
         public Floor(String FLOORNAME){
             floorName = FLOORNAME;

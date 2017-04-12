@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,7 +36,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
@@ -56,7 +59,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<String> searchResults;
     private  ArrayList<Integer> searchResultsAccessCodes;
 
-    private final GestureDetector searchGDT = new GestureDetector(new SearchResultGestureListener());
+    private final GestureDetector searchListGDT = new GestureDetector(new SearchResultGestureListener());
+    private final GestureDetector searchBarGDT = new GestureDetector(new SearchBarGestureListener());
 
 
 
@@ -64,11 +68,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
 
         //get netword permission
         ConnectivityManager check = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -83,16 +82,65 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //Initialize a InsightDatabaseModel
         mDatabase = InsightSingletonDatabase.getInstance(mContext);
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        mapMarkers = mDatabase.getMapMarkerLATs();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMinZoomPreference(16.0f);
+
+        // Add a marker in Sydney and move the camera
+        for(InsightDatabaseModel.Building currentBuilding : mDatabase.getBuildings()){
+            if(!currentBuilding.getBuildingName().equals("UNK")){
+                mMap.addMarker(new MarkerOptions().position(mapMarkers.get(currentBuilding.getBuildingName())).title("Marker of" + currentBuilding.getBuildingName()));
+            }
+
+        }
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapMarkers.get("STA")));
+
+    }
+
+    ////////////////////////////////
+    /////Controller class
+    ////////////////////////////////
+    public void showSearchBar(View v){
         //set up the listener for textEdit
-        EditText searchBar = (EditText)findViewById(R.id.searchbar);
+
+        //set up the listener for textEdit
+        final EditText searchBar = (EditText)findViewById(R.id.searchbar);
         searchBar.setOnFocusChangeListener(new SearchBarFocusChangeListener());
+        searchBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return searchBarGDT.onTouchEvent(event);
+            }
+        });
+
 
 
         final ListView searchResultListView = (ListView)findViewById(R.id.searchResult);
         searchResultListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View view, final MotionEvent event) {
-                return searchGDT.onTouchEvent(event);
+                return searchListGDT.onTouchEvent(event);
             }
         });
 
@@ -111,30 +159,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         //set up search result click listner
-        searchResultListView.setOnItemClickListener(new SearchBarOnItemClicked());
+        searchResultListView.setOnItemClickListener(new SearchResultListOnItemClicked());
 
+
+        searchBar.setVisibility(View.VISIBLE);
+        v.setVisibility(View.GONE);
     }
 
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
 
     ////////////////////////////////
     /////Listener class
@@ -218,7 +249,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * A item click listener class
      */
-    class SearchBarOnItemClicked implements AdapterView.OnItemClickListener{
+    class SearchResultListOnItemClicked implements AdapterView.OnItemClickListener{
         /**
          * Callback method to be invoked when an item in this AdapterView has
          * been clicked.
@@ -280,6 +311,37 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private class SearchBarGestureListener extends GestureDetector.SimpleOnGestureListener{
+        private final int SWIPE_MIN_DISTANCE = 120;
+        private final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // Right to left, your code here
+                return true;
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
+
+                EditText searchBar = (EditText)findViewById(R.id.searchbar);
+                searchBar.setVisibility(View.GONE);
+                Button showSearchBarButton = (Button)findViewById(R.id.searchButton);
+                showSearchBarButton.setVisibility(View.VISIBLE);
+
+                return true;
+            }
+            if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                // Bottom to top, your code here
+                return true;
+            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                // Top to bottom, your code here
+                return true;
+            }
+            return false;
+        }
+
+    }
+
 
     ////////////////////////////////
     /////Helper functions
@@ -293,31 +355,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         String[] perms = new String[]{Manifest.permission.INTERNET};
         ActivityCompat.requestPermissions(this, perms, 1);
 
-    }
-
-    private void getMarkersList(){
-        LatLng ADA_LAT = new LatLng(40.046112078131216,-76.31941705942154);
-        LatLng BAR_LAT = new LatLng(40.046917990535796,-76.31917834281921);
-        LatLng GOE_LAT = new LatLng(40.04497145443324,-76.32026731967926);
-        LatLng HAC_LAT = new LatLng(40.04809450914126,-76.32054224610329);
-        LatLng HAR_LAT = new LatLng(40.04785838574442,-76.31999775767326);
-        LatLng HER_LAT = new LatLng(40.04395299145577,-76.3206535577774);
-        LatLng HUE_LAT = new LatLng(40.044478651666594,-76.32042825222015);
-        LatLng KAU_LAT = new LatLng(40.04779678820205,-76.32056638598442);
-        LatLng KEI_LAT = new LatLng(40.04557923960607,-76.31954848766327);
-        LatLng LSP_LAT = new LatLng(40.04919298549468,-76.32019221782684);
-        LatLng ORT_LAT = new LatLng(40.04828135403209,-76.31578803062439);
-        LatLng ROS_LAT = new LatLng(40.047593679210486,-76.31902545690536);
-        LatLng SCC_LAT = new LatLng(40.04737603359178,-76.31957799196243);
-        LatLng STA_LAT = new LatLng(40.046096674063996,-76.31949618458748);
-        LatLng WRH_LAT = new LatLng(40.04853595503695,-76.32047116756439);
-
-        //TODO complete other buildings
-
-
-
-        mapMarkers.put("ADA", ADA_LAT);
-        mapMarkers.put("BAR", BAR_LAT);
     }
 
 }

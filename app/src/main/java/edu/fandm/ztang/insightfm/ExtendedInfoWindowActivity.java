@@ -3,6 +3,7 @@ package edu.fandm.ztang.insightfm;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -67,8 +68,9 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
 
             if (classType.equals("Course")){
 
-                //fetchDataTest();
+
                 output = fetchCourseData();
+
             }else if(classType.equals("Department")){
                 output = fetchDepartmentData();
             }
@@ -80,6 +82,7 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             Log.d("Result is: ", "Complete");
             TextView infoDescriptionView = (TextView)findViewById(R.id.infoDes);
+            infoDescriptionView.setMovementMethod(new ScrollingMovementMethod());
             infoDescriptionView.setText(result);
         }
 
@@ -125,7 +128,42 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
             return output;
         }
 
+        private String fetchBuildingData(){
+            String output = "";
+
+            InsightDatabaseModel.Building currentBuilding = mDatabase.getBuilding(inforID);
+            String infoTitle = currentBuilding.getResourceTitle();
+
+
+            String url = "https://www.fandm.edu/map/stager-hall";
+
+
+            if(currentBuilding.getBuildingDescription() == null){
+                try{
+                    Document doc = Jsoup.connect(url).get();
+
+                    Element mainBody = doc.select("[data-slug = 'stager-hall:body']").first();
+                    Element mainContent = mainBody.getElementsByTag("p").first();
+
+                    output = mainContent.text();
+                    currentBuilding.setBuildingDescription(output);
+
+                    Elements links = mainBody.getElementsByTag("a");
+
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }else{
+                output = currentBuilding.getBuildingDescription();
+                Log.d("Progess: ", "Data already stored");
+            }
+
+            return output;
+        }
+
         private String fetchDepartmentData(){
+
+            //TODO implement this
             String output = "";
 
             InsightDatabaseModel.Department currentDepartment = mDatabase.getDepartment(inforID);
