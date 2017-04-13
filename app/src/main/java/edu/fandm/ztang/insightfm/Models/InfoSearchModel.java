@@ -136,7 +136,7 @@ public class InfoSearchModel {
                         index = 35;
                     }
                 }
-                Log.d("Error Insert: ", s + "     " + c + "     " +  String.valueOf(index));
+                //Log.d("Error Insert: ", s + "     " + c + "     " +  String.valueOf(index));
                 if(p.getNodeAtIndex(index)==null){
                     TrieNode temp;
                     if(isNum){
@@ -236,7 +236,7 @@ public class InfoSearchModel {
                     return null;
                 }
             }
-            Log.d("P's INFOID: ", String.valueOf(p.isEnd) + "    " + String.valueOf(p.getInfoID()));
+            //Log.d("P's INFOID: ", String.valueOf(p.isEnd) + "    " + String.valueOf(p.getInfoID()));
 
 
             if(p==root){

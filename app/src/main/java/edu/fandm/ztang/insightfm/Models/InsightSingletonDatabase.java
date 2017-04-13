@@ -53,6 +53,9 @@ public class InsightSingletonDatabase {
     private InfoSearchModel.Trie buildingTrie;
     private InfoSearchModel.Trie instructorTrie;
 
+    //create some instance for data searching
+    private ArrayList<Integer> searchCategoryIndex;
+
 
     //Create some instance for data fetching
     public Map<String, String> departURL;
@@ -103,8 +106,6 @@ public class InsightSingletonDatabase {
     public static InsightSingletonDatabase getInstance(Context pContext){
         if(mDatabase == null){
             mDatabase = new InsightSingletonDatabase(pContext);
-
-            Log.d(TAG_PROGRESS, "Initializing Database");
         }
 
         return mDatabase;
@@ -115,7 +116,44 @@ public class InsightSingletonDatabase {
         return courseTitleTrie.searchAllPossibleResult(courseTitle);
     }
 
-    
+    public ArrayList<Integer> searchInfor(String searchWord){
+        ArrayList<Integer> inforIDlist = new ArrayList<>();
+
+        ArrayList<Integer> buildingResult = buildingTrie.searchAllPossibleResult(searchWord);
+        ArrayList<Integer> departmentResult = courseDEPTrie.searchAllPossibleResult(searchWord);
+        ArrayList<Integer> courseResult = courseTitleTrie.searchAllPossibleResult(searchWord);
+        ArrayList<Integer> sessionResult = sessionCRNTrie.searchAllPossibleResult(searchWord);
+        ArrayList<Integer> instructorResult = instructorTrie.searchAllPossibleResult(searchWord);
+
+        if(!buildingResult.isEmpty()){
+            inforIDlist.addAll(buildingResult);
+            searchCategoryIndex.add(buildingResult.size() - 1);
+        }
+
+        if(!departmentResult.isEmpty()){
+            inforIDlist.addAll(departmentResult);
+            searchCategoryIndex.add(departmentResult.size() -1);
+        }
+
+        if(!courseResult.isEmpty()){
+            inforIDlist.addAll(courseResult);
+            searchCategoryIndex.add(courseResult.size() -1 );
+        }
+
+        if(!sessionResult.isEmpty()){
+            inforIDlist.addAll(sessionResult);
+            searchCategoryIndex.add(sessionResult.size() - 1);
+        }
+
+        if(!instructorResult.isEmpty()){
+            inforIDlist.addAll(instructorResult);
+            searchCategoryIndex.add(instructorResult.size() - 1);
+        }
+
+        return inforIDlist;
+
+    }
+
 
 
     //////////////////////////////
@@ -149,6 +187,9 @@ public class InsightSingletonDatabase {
 
     //TODO implement getter methods for floors, offices, and buildings.
 
+    public ArrayList<Integer> getSearchCategoryIndex() {
+        return searchCategoryIndex;
+    }
 
 
     //////////////////////////////

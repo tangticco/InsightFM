@@ -80,7 +80,7 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
 
 
         protected void onPostExecute(String result) {
-            Log.d("Result is: ", "Complete");
+
             TextView infoDescriptionView = (TextView)findViewById(R.id.infoDes);
             infoDescriptionView.setMovementMethod(new ScrollingMovementMethod());
             infoDescriptionView.setText(result);
@@ -122,7 +122,6 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
                 }
             }else{
                 output = currentCourse.getCourseDescription();
-                Log.d("Progess: ", "Data already stored");
             }
 
             return output;
@@ -155,7 +154,7 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
                 }
             }else{
                 output = currentBuilding.getBuildingDescription();
-                Log.d("Progess: ", "Data already stored");
+
             }
 
             return output;

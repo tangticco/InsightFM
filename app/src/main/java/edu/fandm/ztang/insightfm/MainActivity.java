@@ -191,13 +191,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }else{
                 searchResultsAccessCodes = mDatabase.searchCourse(searchWord);
                 if(searchResultsAccessCodes.isEmpty()){
-                    searchResults.add("There is no such course");
+                    searchResults.add("There is no result");
                     searchResultsAccessCodes.add(-1);
                 }else{
 
                     for(int i = 0; i < searchResultsAccessCodes.size(); i++){
                         searchResults.add(mDatabase.getCourse(searchResultsAccessCodes.get(i)).getTitle());
                     }
+
 
                 }
             }
