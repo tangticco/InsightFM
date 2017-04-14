@@ -33,13 +33,20 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main">
+
+        </activity>
+        <activity android:name=".ExtendedInfoWindowActivity" />
+        <activity
+            android:name=".MainContentActivity"
+            android:label="@string/title_activity_main_content"
+            android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExtendedInfoWindowActivity"></activity>
     </application>
 
 </manifest>

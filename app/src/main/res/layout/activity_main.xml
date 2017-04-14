@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -71,10 +80,20 @@
         android:layout_marginStart="334dp"
         android:onClick="showSearchBar"/>
 
+    <Button
+            android:id="@+id/testButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/searchButton"
+            android:text="Button"
+        android:onClick="showTest"/>
 
 
+    </RelativeLayout>
 
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>
 
 

@@ -3,22 +3,26 @@ package edu.fandm.ztang.insightfm;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -36,27 +40,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MainContentActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
 
     //Google map related variables
     private GoogleMap mMap;
-    private Map<String, LatLng>  mapMarkers = new Hashtable<String, LatLng>();
+    private Map<String, LatLng> mapMarkers = new Hashtable<String, LatLng>();
 
 
     //search engine database variables
     private InsightSingletonDatabase mDatabase;
     private Context mContext = this;
 
-    
+
     //variables for searching result
     private ArrayList<String> searchResults;
     private  ArrayList<Integer> searchResultsAccessCodes;
@@ -71,12 +74,31 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_content);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         //get netword permission
         ConnectivityManager check = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -96,12 +118,64 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_content, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
 
     /**
@@ -113,7 +187,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMinZoomPreference(16.0f);
@@ -193,7 +267,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * A TextWatcher class for searchbar
      */
-    class SearchBarTextChangedListener implements TextWatcher{
+    class SearchBarTextChangedListener implements TextWatcher {
 
         //Called everytime when the user type new things in to the search bar
         public void afterTextChanged(Editable s) {
@@ -377,5 +451,4 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this, perms, 1);
 
     }
-
 }
