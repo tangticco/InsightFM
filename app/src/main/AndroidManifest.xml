@@ -30,23 +30,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD3oHlBZpwK7ZLNx6xFwS_OgJBTjXPWTD4" />
 
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main">
-
-        </activity>
         <activity android:name=".ExtendedInfoWindowActivity" />
         <activity
             android:name=".MainContentActivity"
             android:label="@string/title_activity_main_content"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

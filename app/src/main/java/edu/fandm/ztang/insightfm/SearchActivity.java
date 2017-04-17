@@ -1,24 +1,17 @@
 package edu.fandm.ztang.insightfm;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -26,37 +19,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
-import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    //Google map related variables
-    private GoogleMap mMap;
-    private Map<String, LatLng>  mapMarkers = new Hashtable<String, LatLng>();
-
+public class SearchActivity extends AppCompatActivity {
 
     //search engine database variables
     private InsightSingletonDatabase mDatabase;
     private Context mContext = this;
 
-    
     //variables for searching result
     private ArrayList<String> searchResults;
     private  ArrayList<Integer> searchResultsAccessCodes;
@@ -66,79 +41,29 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private final GestureDetector searchListGDT = new GestureDetector(new SearchResultGestureListener());
     private final GestureDetector searchBarGDT = new GestureDetector(new SearchBarGestureListener());
 
-
-    //UI variables
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-
+    //UI instances
+    private EditText searchBar;
+    private ListView searchResultListView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //get netword permission
-        ConnectivityManager check = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] info = check.getAllNetworkInfo();
-        for (int i = 0; i<info.length; i++){
-            if (info[i].getState() == NetworkInfo.State.CONNECTED){
-                Toast.makeText(mContext, "Internet is connected", Toast.LENGTH_SHORT).show();
-            }
-        }
+        setContentView(R.layout.activity_search);
 
 
-        //Initialize a InsightDatabaseModel
+        //Set up the navigation tool bar
+        //TODO implement the toolbar (back to main activity)
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //get an instance of the database
         mDatabase = InsightSingletonDatabase.getInstance(mContext);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mapMarkers = mDatabase.getMapMarkerLATs();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-
-    }
-
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMinZoomPreference(16.0f);
-
-        // Add a marker in Sydney and move the camera
-        for(InsightDatabaseModel.Building currentBuilding : mDatabase.getBuildings()){
-            if(!currentBuilding.getBuildingName().equals("UNK")){
-                mMap.addMarker(new MarkerOptions().position(mapMarkers.get(currentBuilding.getBuildingName())).title("Marker of" + currentBuilding.getBuildingName()));
-            }
-
-        }
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapMarkers.get("STA")));
-
-    }
-
-    ////////////////////////////////
-    /////Controller class
-    ////////////////////////////////
-    public void showSearchBar(View v){
-        //set up the listener for textEdit
-
-        //set up the listener for textEdit
-        final EditText searchBar = (EditText)findViewById(R.id.searchbar);
+        //////////////////////////////
+        //set up the search bar
+        searchBar = (EditText)findViewById(R.id.searchbar);
         searchBar.setOnFocusChangeListener(new SearchBarFocusChangeListener());
         searchBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -147,16 +72,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-
-        final ListView searchResultListView = (ListView)findViewById(R.id.searchResult);
+        //////////////////////////////
+        //set up search result listview
+        searchResultListView = (ListView)findViewById(R.id.searchResult);
         searchResultListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View view, final MotionEvent event) {
+                //handle gesture event on listview
                 return searchListGDT.onTouchEvent(event);
             }
         });
-
         //Automatically hide the keyboard when the user scoll the list view
         searchResultListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -170,20 +95,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
         //set up search result click listner
         searchResultListView.setOnItemClickListener(new SearchResultListOnItemClicked());
 
 
-        searchBar.setVisibility(View.VISIBLE);
-        v.setVisibility(View.GONE);
-    }
-
-
-    //test
-    public void showTest(View v){
-        Intent intent = new Intent(mContext, MainContentActivity.class);
-        startActivity(intent);
     }
 
 
@@ -193,13 +108,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * A TextWatcher class for searchbar
      */
-    class SearchBarTextChangedListener implements TextWatcher{
+    class SearchBarTextChangedListener implements TextWatcher {
 
         //Called everytime when the user type new things in to the search bar
         public void afterTextChanged(Editable s) {
 
             //find the ListView
-            final ListView searchResultListView = (ListView)findViewById(R.id.searchResult);
+            searchResultListView = (ListView)findViewById(R.id.searchResult);
 
             String searchWord = s.toString();
             searchResults = new ArrayList<>();
@@ -209,17 +124,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 searchResults.add("There is no such course");
                 searchResultsAccessCodes.add(-1);
             }else{
-                searchResultsAccessCodes = mDatabase.searchCourse(searchWord);
+                searchResultsAccessCodes = mDatabase.searchInfor(searchWord);
                 if(searchResultsAccessCodes.isEmpty()){
                     searchResults.add("There is no result");
                     searchResultsAccessCodes.add(-1);
                 }else{
-
-                    for(int i = 0; i < searchResultsAccessCodes.size(); i++){
-                        searchResults.add(mDatabase.getCourse(searchResultsAccessCodes.get(i)).getTitle());
-                    }
-
-
+                    searchResults = mDatabase.getSearchResultList();
                 }
             }
 
@@ -237,7 +147,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            final ListView searchResultListView = (ListView)findViewById(R.id.searchResult);
+            searchResultListView = (ListView)findViewById(R.id.searchResult);
             searchResultListView.setVisibility(View.VISIBLE);
         }
 
@@ -250,25 +160,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     class SearchBarFocusChangeListener implements View.OnFocusChangeListener{
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            ListView searchResult = (ListView)findViewById(R.id.searchResult);
+            searchResultListView = (ListView)findViewById(R.id.searchResult);
             EditText searchBar = (EditText)findViewById(R.id.searchbar);
             if(hasFocus){
-                Toast.makeText(getApplicationContext(), "got the focus", Toast.LENGTH_LONG).show();
                 searchBar.addTextChangedListener(new SearchBarTextChangedListener());
-
-                //TODO make this animation better
-//                Animation a = AnimationUtils.loadAnimation(mContext, R.anim.slideup);
-//                searchBar.startAnimation(a);
-                searchResult.setVisibility(View.VISIBLE);
+                searchResultListView.setVisibility(View.VISIBLE);
             }else {
                 Toast.makeText(getApplicationContext(), "lost the focus", Toast.LENGTH_LONG).show();
-                searchResult.setVisibility(View.GONE);
+                searchResultListView.setVisibility(View.GONE);
             }
         }
     }
 
     /**
-     * A item click listener class
+     * A item click listener class for search result listview
      */
     class SearchResultListOnItemClicked implements AdapterView.OnItemClickListener{
         /**
@@ -291,6 +196,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 //pass information to the extended info window activity
                 Bundle b = new Bundle();
                 b.putInt("INFOID", searchResultsAccessCodes.get(position));
+                b.putInt("Position", position);
                 b.putString("ClassType",  "Course"); //TODO change it later
                 intent.putExtras(b);
 
@@ -301,7 +207,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * A searchresult listview gesture listener class
+     * A gesture listener search result listview class
      */
     private class SearchResultGestureListener extends GestureDetector.SimpleOnGestureListener{
         private final int SWIPE_MIN_DISTANCE = 120;
@@ -314,9 +220,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 // Right to left, your code here
                 return true;
             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
-                ListView searchResult = (ListView)findViewById(R.id.searchResult);
-                Toast.makeText(getApplicationContext(), "Searchresult byebye", Toast.LENGTH_LONG).show();
-                searchResult.setVisibility(View.GONE);
+                searchResultListView = (ListView)findViewById(R.id.searchResult);
+                searchResultListView.setVisibility(View.GONE);
 
                 return true;
             }
@@ -332,6 +237,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * A gesture listener search bar class
+     */
     private class SearchBarGestureListener extends GestureDetector.SimpleOnGestureListener{
         private final int SWIPE_MIN_DISTANCE = 120;
         private final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -343,12 +251,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 // Right to left, your code here
                 return true;
             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
-
-                EditText searchBar = (EditText)findViewById(R.id.searchbar);
-                searchBar.setVisibility(View.GONE);
-                Button showSearchBarButton = (Button)findViewById(R.id.searchButton);
-                showSearchBarButton.setVisibility(View.VISIBLE);
-
+                searchBar.setText("");
                 return true;
             }
             if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
@@ -360,21 +263,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
             return false;
         }
-
-    }
-
-
-    ////////////////////////////////
-    /////Helper functions
-    ////////////////////////////////
-
-    /**
-     * Get the permission of writing to external storage
-     */
-    public void getPermissions(){
-
-        String[] perms = new String[]{Manifest.permission.INTERNET};
-        ActivityCompat.requestPermissions(this, perms, 1);
 
     }
 

@@ -40,6 +40,7 @@ public class InsightSingletonDatabase {
     private ArrayList<InsightDatabaseModel.Office> offices;
     private ArrayList<InsightDatabaseModel.Department> departments;
     private ArrayList<InsightDatabaseModel.Instructor> instructors;
+    private ArrayList<InsightDatabaseModel.Session> sessions;
 
     //Create some instance for google map related variables
     private Map<String, LatLng>  mapMarkers = new Hashtable<String, LatLng>();
@@ -52,6 +53,7 @@ public class InsightSingletonDatabase {
     private InfoSearchModel.Trie sessionCRNTrie;
     private InfoSearchModel.Trie buildingTrie;
     private InfoSearchModel.Trie instructorTrie;
+    ArrayList<Integer> inforIDlist;
 
     //create some instance for data searching
     private ArrayList<Integer> searchCategoryIndex;
@@ -59,6 +61,11 @@ public class InsightSingletonDatabase {
 
     //Create some instance for data fetching
     public Map<String, String> departURL;
+
+
+    //Variables for map changes
+    private boolean mapNeedChange = false;
+    private LatLng newMapLocation;
 
 
     /**
@@ -76,6 +83,7 @@ public class InsightSingletonDatabase {
         floors = new ArrayList<>();
         offices = new ArrayList<>();
         instructors = new ArrayList<>();
+        sessions = new ArrayList<>();
 
         //initialize instances for data-searching
         courseTitleTrie = new InfoSearchModel.Trie(false, -1);
@@ -117,7 +125,8 @@ public class InsightSingletonDatabase {
     }
 
     public ArrayList<Integer> searchInfor(String searchWord){
-        ArrayList<Integer> inforIDlist = new ArrayList<>();
+        inforIDlist = new ArrayList<>();
+        searchCategoryIndex = new ArrayList<>();
 
         ArrayList<Integer> buildingResult = buildingTrie.searchAllPossibleResult(searchWord);
         ArrayList<Integer> departmentResult = courseDEPTrie.searchAllPossibleResult(searchWord);
@@ -125,29 +134,46 @@ public class InsightSingletonDatabase {
         ArrayList<Integer> sessionResult = sessionCRNTrie.searchAllPossibleResult(searchWord);
         ArrayList<Integer> instructorResult = instructorTrie.searchAllPossibleResult(searchWord);
 
+
+        int currentIndex = 0;
         if(!buildingResult.isEmpty()){
             inforIDlist.addAll(buildingResult);
-            searchCategoryIndex.add(buildingResult.size() - 1);
+            currentIndex = currentIndex + buildingResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
         }
 
         if(!departmentResult.isEmpty()){
             inforIDlist.addAll(departmentResult);
-            searchCategoryIndex.add(departmentResult.size() -1);
+            currentIndex =currentIndex +departmentResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
         }
 
         if(!courseResult.isEmpty()){
             inforIDlist.addAll(courseResult);
-            searchCategoryIndex.add(courseResult.size() -1 );
+            currentIndex = currentIndex +courseResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
         }
 
         if(!sessionResult.isEmpty()){
             inforIDlist.addAll(sessionResult);
-            searchCategoryIndex.add(sessionResult.size() - 1);
+            currentIndex = currentIndex +sessionResult.size();
+            searchCategoryIndex.add(currentIndex );
+        }else{
+            searchCategoryIndex.add(0);
         }
 
         if(!instructorResult.isEmpty()){
             inforIDlist.addAll(instructorResult);
-            searchCategoryIndex.add(instructorResult.size() - 1);
+            currentIndex = currentIndex +instructorResult.size();
+            searchCategoryIndex.add(currentIndex );
+        }else{
+            searchCategoryIndex.add(0);
         }
 
         return inforIDlist;
@@ -156,29 +182,34 @@ public class InsightSingletonDatabase {
 
 
 
-    //////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////getter methods
-    //////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     public ArrayList<InsightDatabaseModel.Building> getBuildings() {
         return buildings;
     }
 
-    public InsightDatabaseModel.Building getBuilding(int accessCode){
-        return buildings.get(accessCode);
+    public InsightDatabaseModel.Building getBuilding(int infoID){
+        return buildings.get(infoID);
     }
 
-    public InsightDatabaseModel.Course getCourse(int accessCode){
-        return courses.get(accessCode);
+    public InsightDatabaseModel.Course getCourse(int infoID){
+        return courses.get(infoID);
     }
 
-    public InsightDatabaseModel.Instructor getInstructor(int accessCode){
-        return instructors.get(accessCode);
+    public InsightDatabaseModel.Instructor getInstructor(int infoID){
+        return instructors.get(infoID);
     }
 
-    public InsightDatabaseModel.Department getDepartment(int accessCode){
-        return departments.get(accessCode);
+    public InsightDatabaseModel.Department getDepartment(int infoID){
+        return departments.get(infoID);
+    }
+
+    public InsightDatabaseModel.Session getSession(int infoID){
+        return sessions.get(infoID);
     }
 
     public String getDepartURL(String departmentName){
@@ -187,14 +218,57 @@ public class InsightSingletonDatabase {
 
     //TODO implement getter methods for floors, offices, and buildings.
 
-    public ArrayList<Integer> getSearchCategoryIndex() {
-        return searchCategoryIndex;
+    public ArrayList<String> getSearchResultList(){
+
+
+        ArrayList<String> resultStrings = new ArrayList<>();
+
+        for(int currentIndex = 0; currentIndex < inforIDlist.size(); currentIndex++ ){
+            if(currentIndex < searchCategoryIndex.get(0)){
+                resultStrings.add(buildings.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(1)){
+                resultStrings.add(departments.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(2)){
+                resultStrings.add(courses.get(inforIDlist.get(currentIndex)).getResourceTitle() + ": " + courses.get(inforIDlist.get(currentIndex)).getTitle());
+            }else if(currentIndex < searchCategoryIndex.get(3)){
+                resultStrings.add(sessions.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(4)){
+                resultStrings.add(instructors.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }
+        }
+
+
+        return resultStrings;
+    }
+
+    public InsightDatabaseModel.FMResource getSearchResultItem(int currentIndex){
+
+            if(currentIndex < searchCategoryIndex.get(0)){
+                return buildings.get(inforIDlist.get(currentIndex));
+            }else if(currentIndex < searchCategoryIndex.get(1)){
+                return departments.get(inforIDlist.get(currentIndex));
+            }else if(currentIndex < searchCategoryIndex.get(2)){
+                return courses.get(inforIDlist.get(currentIndex));
+            }else if(currentIndex < searchCategoryIndex.get(3)){
+                return sessions.get(inforIDlist.get(currentIndex));
+            }else{
+                return instructors.get(inforIDlist.get(currentIndex));
+            }
     }
 
 
-    //////////////////////////////
+    ////////////Map related
+    public Boolean isMapNeedChange(){
+        return mapNeedChange;
+    }
+
+    public LatLng getNewMapLocation() {
+        return newMapLocation;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////Helper functions
-    //////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * A private helper to create the database and search engine
@@ -217,6 +291,7 @@ public class InsightSingletonDatabase {
 
             while(line != null){
                 String[] newCourseInfoList = line.split("\t");
+                LatLng currentLocation = new LatLng(40.046096674063996,-76.31949618458748); //default location, Stager
 
                 //Check if the building is already in the trie
                 InsightDatabaseModel.Building currentBuilding;
@@ -226,9 +301,10 @@ public class InsightSingletonDatabase {
 
                     //check if there is corresponding location for the building
                     if(mapMarkers.get(newCourseInfoList[4]) != null){
-                        currentBuilding.setBuildingLocation(mapMarkers.get(newCourseInfoList[4]));
+                        currentLocation = mapMarkers.get(newCourseInfoList[4]);
+                        currentBuilding.setRecourseLocation(currentLocation);
                     }
-
+                    currentBuilding.setInfoID(currentBuildingIndex);
                     buildingTrie.insert(newCourseInfoList[4], currentBuildingIndex);
                     buildings.add(currentBuilding);
                     currentBuildingIndex += 1;
@@ -241,6 +317,8 @@ public class InsightSingletonDatabase {
                 tempNode = courseDEPTrie.searchNode(newCourseInfoList[1]);
                 if(tempNode == null){
                     currentDepartment = new InsightDatabaseModel.Department(newCourseInfoList[1]);
+                    currentDepartment.setInfoID(currentDepartIndex);
+                    currentDepartment.setRecourseLocation(currentLocation);
                     courseDEPTrie.insert(newCourseInfoList[1], currentDepartIndex);
                     departments.add(currentDepartment);
                     currentDepartIndex += 1;
@@ -254,6 +332,8 @@ public class InsightSingletonDatabase {
                 tempNode = courseTitleTrie.searchNode(newCourseInfoList[3]);
                 if(tempNode == null){
                     currentCourse = new InsightDatabaseModel.Course(newCourseInfoList[1], Integer.valueOf(newCourseInfoList[2]), newCourseInfoList[3], currentDepartment);
+                    currentCourse.setInfoID(currentCourseIndex);
+                    currentCourse.setRecourseLocation(currentLocation);
                     courseTitleTrie.insert(newCourseInfoList[3], currentCourseIndex);
                     courses.add(currentCourse);
                     currentCourseIndex += 1;
@@ -266,6 +346,8 @@ public class InsightSingletonDatabase {
                 tempNode = instructorTrie.searchNode(newCourseInfoList[9]);
                 if(tempNode == null){
                     currentInstructor = new InsightDatabaseModel.Instructor(newCourseInfoList[9]);
+                    currentInstructor.setInfoID(currentInstructorIndex);
+                    currentInstructor.setRecourseLocation(currentLocation);
                     instructorTrie.insert(newCourseInfoList[9], currentInstructorIndex);
                     instructors.add(currentInstructor);
                     currentInstructorIndex += 1;
@@ -275,6 +357,9 @@ public class InsightSingletonDatabase {
 
                 //the course, building and instructor is alread in the database, add a new session
                 InsightDatabaseModel.Session newSession = new InsightDatabaseModel.Session(Integer.valueOf(newCourseInfoList[0]), currentBuilding, newCourseInfoList[5], newCourseInfoList[6], newCourseInfoList[7], newCourseInfoList[8], currentInstructor, currentCourse);
+                newSession.setInfoID(currentSessionIndex);
+                newSession.setRecourseLocation(currentLocation);
+                sessions.add(newSession);
                 sessionCRNTrie.insert(newCourseInfoList[0], currentSessionIndex);
                 currentSessionIndex += 1;
 
@@ -378,7 +463,7 @@ public class InsightSingletonDatabase {
     private void setMapMarkersFullName(){
 
         mapMarkersFullName.put("ADA200",	"Adams Auditorium, located in Hackman Hall");
-        mapMarkersFullName.put("APP",	"Appel (use east entrance to Appel Infirmary building)");
+        mapMarkersFullName.put("APP",	"Appel");
         mapMarkersFullName.put("BARGAU",	"Barshinger Center, Gault Room");
         mapMarkersFullName.put("BARSTA",	"Barshinger Center, Stage");
         mapMarkersFullName.put("BON",	"Bonchek College House");
@@ -389,7 +474,7 @@ public class InsightSingletonDatabase {
         mapMarkersFullName.put("HER",	"Herman Arts");
         mapMarkersFullName.put("JIC",	"Joseph International Center");
         mapMarkersFullName.put("KAU",	"Kaufman Lecture Hall");
-        mapMarkersFullName.put("KEI",	"Keiper Liberal Arts");
+        mapMarkersFullName.put("KEI",	"Keiper Liberal Arts"); //URL checked
         mapMarkersFullName.put("KLE",	"Klehr Center");
         mapMarkersFullName.put( "LSP",	"Barshinger Life Sciences & Philosophy Building");
         mapMarkersFullName.put("NEW",	"New College House");
@@ -397,7 +482,7 @@ public class InsightSingletonDatabase {
         mapMarkersFullName.put("ROS",	"Roschel Performing Arts Center");
         mapMarkersFullName.put("SCC",	"Steinman College Center");
         mapMarkersFullName.put("SFL",	"Shadek-Fackenthal Library");
-        mapMarkersFullName.put("STA",	"Stager Hall");
+        mapMarkersFullName.put("STA",	"Stager Hall"); //URL checked
         mapMarkersFullName.put("WAR",	"Ware College House");
         mapMarkersFullName.put("WEI",	"Weis College House");
         mapMarkersFullName.put("WOH",	"Wohlsen Center");
@@ -405,4 +490,11 @@ public class InsightSingletonDatabase {
 
     }
 
+    public void setMapNeedChange(boolean mapNeedChange) {
+        this.mapNeedChange = mapNeedChange;
+    }
+
+    public void setNewMapLocation(LatLng newMapLocation) {
+        this.newMapLocation = newMapLocation;
+    }
 }

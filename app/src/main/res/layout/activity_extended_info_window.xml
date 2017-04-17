@@ -49,4 +49,17 @@
         android:textSize="16.5sp"
         android:typeface="serif"
         android:scrollbars="vertical"/>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/infoDes"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="22dp"
+        android:onClick="gotoLocation"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
+
+
 </RelativeLayout>

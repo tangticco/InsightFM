@@ -29,7 +29,12 @@ public class InsightDatabaseModel {
     public static class FMResource{
         String classType;
         String resourceTitle;
+        LatLng recourseLocation = new LatLng(40.046096674063996,-76.31949618458748);
+        int infoID;
 
+        ////////////////////////////////////
+        //Setter methods
+        ////////////////////////////////////
         public void setClassType(String classType) {
             this.classType = classType;
         }
@@ -38,12 +43,31 @@ public class InsightDatabaseModel {
             this.resourceTitle = resourceTitle;
         }
 
+        public LatLng getRecourseLocation() {
+            return recourseLocation;
+        }
+
+        public int getInfoID() {
+            return infoID;
+        }
+
+        ////////////////////////////////////
+        //Getter methods
+        ////////////////////////////////////
         public String getClassType() {
             return classType;
         }
 
         public String getResourceTitle() {
             return resourceTitle;
+        }
+
+        public void setRecourseLocation(LatLng recourseLocation) {
+            this.recourseLocation = recourseLocation;
+        }
+
+        public void setInfoID(int infoID) {
+            this.infoID = infoID;
         }
     }
 
@@ -54,7 +78,6 @@ public class InsightDatabaseModel {
         //Building class attributes
         private String buildingName;
         private String buildingDescription;
-        private LatLng buildingLocation;
 
         //Building class values
         private ArrayList<Floor> floors;
@@ -80,10 +103,6 @@ public class InsightDatabaseModel {
             return floors;
         }
 
-        public LatLng getBuildingLocation() {
-            return buildingLocation;
-        }
-
         public String getBuildingDescription() {
             return buildingDescription;
         }
@@ -103,9 +122,7 @@ public class InsightDatabaseModel {
             departments.add(newDeparment);
         }
 
-        public void setBuildingLocation(LatLng buildingLocation) {
-            this.buildingLocation = buildingLocation;
-        }
+
 
         public void setBuildingDescription(String buildingDescription) {
             this.buildingDescription = buildingDescription;
@@ -200,10 +217,10 @@ public class InsightDatabaseModel {
         private Floor officeFloor;
 
         //Office class attributes
-        int roomNumber;
+        String roomNumber;
         Instructor officeInstructor;
 
-        public Office(int ROOMNUMBER){
+        public Office(String ROOMNUMBER){
 
             //set office class attributes
             roomNumber = ROOMNUMBER;
@@ -228,7 +245,7 @@ public class InsightDatabaseModel {
             return officeInstructor;
         }
 
-        public int getRoomNumber() {
+        public String getRoomNumber() {
             return roomNumber;
         }
 
@@ -529,6 +546,7 @@ public class InsightDatabaseModel {
         //Instructor attributes
         private String fullName;
         private String emailAddress;
+        private String phoneNumber;
         private String instructorDescription;
 
         //Instructor values
@@ -572,6 +590,10 @@ public class InsightDatabaseModel {
             return teachingCourses;
         }
 
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
         ////////////////////////////////////
         //Setter methods
         ////////////////////////////////////
@@ -595,7 +617,9 @@ public class InsightDatabaseModel {
             teachingCourses.add(newCourse);
         }
 
-
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
     }
 
 }
