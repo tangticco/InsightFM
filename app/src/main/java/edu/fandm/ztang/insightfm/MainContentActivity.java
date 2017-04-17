@@ -225,7 +225,7 @@ public class MainContentActivity extends AppCompatActivity
      */
     public void getPermissions(){
 
-        String[] perms = new String[]{Manifest.permission.INTERNET};
+        String[] perms = new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(this, perms, 1);
 
     }
