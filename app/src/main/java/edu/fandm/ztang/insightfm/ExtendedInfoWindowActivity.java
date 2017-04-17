@@ -34,6 +34,7 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
     private int inforID;    //accesscode of a particular resource arraylist
     private int position;   //index in the searchResultAccessCodesl
     private String classType;
+    private TextView infoTitle;
 
     //map movement related variables
 
@@ -59,8 +60,8 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
             TextView classTypeTextView = (TextView)findViewById(R.id.classType);
             classTypeTextView.setText(classType);
 
-            TextView infoTitle = (TextView)findViewById(R.id.infoTitle);
-            infoTitle.setText(mDatabase.getCourse(inforID).getTitle());
+            infoTitle= (TextView)findViewById(R.id.infoTitle);
+            setInfoTitle();
 
             //Fetch data from the website
             new InternetRequest().execute("https://www.fandm.edu");
@@ -327,6 +328,30 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
 
         return output;
 
+    }
+
+    private void setInfoTitle(){
+        if (classType.equals("Course")){
+
+            infoTitle.setText(mDatabase.getCourse(inforID).getTitle());
+
+        }else if(classType.equals("Department")){
+
+            infoTitle.setText(mDatabase.getDepartment(inforID).getDepartmentName());
+
+        }else if(classType.equals("Building")){
+
+            infoTitle.setText(mDatabase.getBuilding(inforID).getBuildingName());
+
+        }else if(classType.equals("Instructor")){
+
+            infoTitle.setText(mDatabase.getInstructor(inforID).getFullName());
+
+        }else if(classType.equals("Session")){
+
+            infoTitle.setText(mDatabase.getSession(inforID).getSessionCourse().getTitle());
+
+        }
     }
 
 

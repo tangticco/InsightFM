@@ -32,6 +32,8 @@
             android:id="@+id/searchbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="57dp"
             android:alpha="0.5"
             android:background="@color/white"
@@ -41,9 +43,7 @@
             android:paddingBottom="26dp"
             android:paddingLeft="26dp"
             android:paddingRight="26dp"
-            android:paddingTop="26dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:paddingTop="26dp" />
 
 
         <ListView
@@ -61,6 +61,18 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnSpeak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_microphone_2"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="54dp" />
 
 
     </RelativeLayout>

@@ -79,11 +79,8 @@ public class InfoSearchModel {
 
             isNum = pisNum;
 
-            if(isNum){
-                root  = new NumberTrieNode(INFOID);
-            }else{
-                root = new WordTrieNode(INFOID);
-            }
+            root = new WordTrieNode(INFOID);
+
         }
 
         // Inserts a word into the trie.
@@ -139,11 +136,9 @@ public class InfoSearchModel {
                 //Log.d("Error Insert: ", s + "     " + c + "     " +  String.valueOf(index));
                 if(p.getNodeAtIndex(index)==null){
                     TrieNode temp;
-                    if(isNum){
-                        temp = new NumberTrieNode(INFOID);
-                    }else{
-                        temp = new WordTrieNode(INFOID);
-                    }
+
+                    temp = new WordTrieNode(INFOID);
+
                     p.setNodeAtIndex(index, temp);
                     p = temp;
                 }else{
@@ -249,7 +244,6 @@ public class InfoSearchModel {
             return p;
         }
 
-
         //A Arraylist to store possible result of a word search
         private ArrayList<Integer> possibleSearchResult;
 
@@ -262,7 +256,6 @@ public class InfoSearchModel {
             //get the start trienode
             final TrieNode startNode = searchNode(searchWord);
 
-            //TODO use better algorithm to get rid of repetitive work
             searchAllPossibleResultHelper(startNode);
             return possibleSearchResult;
         }

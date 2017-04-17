@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.jsoup.helper.StringUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
+import java.lang.Object;
 
 /**
  * Created by zhuofantang on 4/6/17.
@@ -54,6 +57,7 @@ public class InsightSingletonDatabase {
     private InfoSearchModel.Trie buildingTrie;
     private InfoSearchModel.Trie instructorTrie;
     ArrayList<Integer> inforIDlist;
+    ArrayList<String> wordList;
 
     //create some instance for data searching
     private ArrayList<Integer> searchCategoryIndex;
@@ -91,6 +95,7 @@ public class InsightSingletonDatabase {
         courseDEPTrie = new InfoSearchModel.Trie(false, -1);
         buildingTrie = new InfoSearchModel.Trie(false, -1);
         instructorTrie = new InfoSearchModel.Trie(false, -1);
+        wordList = new ArrayList<>();
 
 
         //initialize mapMarkerLat;
@@ -99,6 +104,9 @@ public class InsightSingletonDatabase {
 
         //create course info database
         getCourseInfo();
+
+        //get the word list
+        getWordList();
 
         //set up department urls
         setupDepartURL();
@@ -115,15 +123,13 @@ public class InsightSingletonDatabase {
         if(mDatabase == null){
             mDatabase = new InsightSingletonDatabase(pContext);
         }
-
         return mDatabase;
     }
 
-    public ArrayList<Integer> searchCourse(String courseTitle){
 
-        return courseTitleTrie.searchAllPossibleResult(courseTitle);
-    }
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////Searching methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<Integer> searchInfor(String searchWord){
         inforIDlist = new ArrayList<>();
         searchCategoryIndex = new ArrayList<>();
@@ -181,6 +187,73 @@ public class InsightSingletonDatabase {
     }
 
 
+    public ArrayList<Integer> fuzzysearchInfor(String searchWord){
+
+        ArrayList<String> searchWords = getFuzzywords(2, searchWord);
+
+        inforIDlist = new ArrayList<>();
+        searchCategoryIndex = new ArrayList<>();
+
+        ArrayList<Integer> buildingResult = new ArrayList<>();
+        ArrayList<Integer> departmentResult = new ArrayList<>();
+        ArrayList<Integer> courseResult = new ArrayList<>();
+        ArrayList<Integer> sessionResult = new ArrayList<>();
+        ArrayList<Integer> instructorResult = new ArrayList<>();
+
+
+        for (int i = 0; i < searchWords.size(); i++){
+            buildingResult.addAll(buildingTrie.searchAllPossibleResult(searchWord));
+            departmentResult.addAll(courseDEPTrie.searchAllPossibleResult(searchWord));
+            courseResult.addAll(courseTitleTrie.searchAllPossibleResult(searchWord));
+            sessionResult.addAll(sessionCRNTrie.searchAllPossibleResult(searchWord));
+            instructorResult.addAll(instructorTrie.searchAllPossibleResult(searchWord));
+        }
+
+
+        int currentIndex = 0;
+        if(!buildingResult.isEmpty()){
+            inforIDlist.addAll(buildingResult);
+            currentIndex = currentIndex + buildingResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
+        }
+
+        if(!departmentResult.isEmpty()){
+            inforIDlist.addAll(departmentResult);
+            currentIndex =currentIndex +departmentResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
+        }
+
+        if(!courseResult.isEmpty()){
+            inforIDlist.addAll(courseResult);
+            currentIndex = currentIndex +courseResult.size();
+            searchCategoryIndex.add(currentIndex);
+        }else{
+            searchCategoryIndex.add(0);
+        }
+
+        if(!sessionResult.isEmpty()){
+            inforIDlist.addAll(sessionResult);
+            currentIndex = currentIndex +sessionResult.size();
+            searchCategoryIndex.add(currentIndex );
+        }else{
+            searchCategoryIndex.add(0);
+        }
+
+        if(!instructorResult.isEmpty()){
+            inforIDlist.addAll(instructorResult);
+            currentIndex = currentIndex +instructorResult.size();
+            searchCategoryIndex.add(currentIndex );
+        }else{
+            searchCategoryIndex.add(0);
+        }
+
+        return inforIDlist;
+
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -370,6 +443,62 @@ public class InsightSingletonDatabase {
         }catch (IOException e){
             Log.d(TAG_ERROR, "There is no course file");
         }
+    }
+
+    private void getWordList(){
+
+        try{
+            InputStream wordInputStream = mContext.getAssets().open("courses.txt");
+            BufferedReader wordInputBuffer = new BufferedReader(new InputStreamReader(wordInputStream));
+
+            String word = wordInputBuffer.readLine();
+            wordList.add(word);
+
+            while(word != null){
+                word = wordInputBuffer.readLine();
+                wordList.add(word);
+            }
+
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private ArrayList<String> getFuzzywords(int threshold, String searchWord){
+
+        ArrayList<String> fuzzyWords = new ArrayList<>();
+
+        for(int i = 0; i < wordList.size(); i++){
+            if(computeLevenshteinDistance(searchWord, wordList.get(i)) <= threshold){
+                fuzzyWords.add(wordList.get(i));
+            }
+        }
+
+        return fuzzyWords;
+    }
+
+    public int computeLevenshteinDistance(CharSequence lhs, CharSequence rhs) {
+        int[][] distance = new int[lhs.length() + 1][rhs.length() + 1];
+
+        for (int i = 0; i <= lhs.length(); i++)
+            distance[i][0] = i;
+        for (int j = 1; j <= rhs.length(); j++)
+            distance[0][j] = j;
+
+        for (int i = 1; i <= lhs.length(); i++)
+            for (int j = 1; j <= rhs.length(); j++)
+                distance[i][j] = minimum(
+                        distance[i - 1][j] + 1,
+                        distance[i][j - 1] + 1,
+                        distance[i - 1][j - 1] + ((lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : 1));
+
+        return distance[lhs.length()][rhs.length()];
+    }
+
+    private static int minimum(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
     }
 
     public Map<String, LatLng> getMapMarkerLATs(){

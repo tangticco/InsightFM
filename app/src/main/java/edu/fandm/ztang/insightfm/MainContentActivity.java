@@ -66,6 +66,8 @@ public class MainContentActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -200,8 +202,8 @@ public class MainContentActivity extends AppCompatActivity
 
     private void mapChange(){
         mMap.moveCamera(CameraUpdateFactory.zoomTo(20.0f));
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mDatabase.getNewMapLocation()));
+        mDatabase.setMapNeedChange(false);
     }
 
     ////////////////////////////////
