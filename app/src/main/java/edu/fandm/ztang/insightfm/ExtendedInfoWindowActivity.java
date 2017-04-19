@@ -28,7 +28,7 @@ import java.net.URL;
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
-public class ExtendedInfoWindowActivity extends MainContentActivity {
+public class ExtendedInfoWindowActivity extends BaseActivity {
 
     private InsightSingletonDatabase mDatabase;
 

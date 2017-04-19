@@ -33,7 +33,7 @@ import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 import edu.fandm.ztang.insightfm.Models.SearchResultCustomAdapter;
 
-public class SearchActivity extends MainContentActivity {
+public class SearchActivity extends BaseActivity {
 
     //search engine database variables
     private InsightSingletonDatabase mDatabase;
