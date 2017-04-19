@@ -314,6 +314,10 @@ public class InsightSingletonDatabase {
         return resultStrings;
     }
 
+    public ArrayList<Integer> getSearchCategoryIndex() {
+        return searchCategoryIndex;
+    }
+
     public InsightDatabaseModel.FMResource getSearchResultItem(int currentIndex){
 
             if(currentIndex < searchCategoryIndex.get(0)){

@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
+import edu.fandm.ztang.insightfm.Models.SearchResultCustomAdapter;
 
 public class SearchActivity extends MainContentActivity {
 
@@ -169,23 +170,23 @@ public class SearchActivity extends MainContentActivity {
             String searchWord = s.toString();
             searchResults = new ArrayList<>();
             searchResultsAccessCodes = new ArrayList<>();
-
-            if(searchWord.replaceAll("\\s","").equals("")){
+            searchResultsAccessCodes = mDatabase.searchInfor(searchWord);
+            if(searchWord.replaceAll("\\s","").equals("") || searchResultsAccessCodes.isEmpty()){
                 searchResults.add("There is no such course");
                 searchResultsAccessCodes.add(-1);
+                final ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, searchResults);
+                searchResultListView.setAdapter(adapter);
+
             }else{
-                searchResultsAccessCodes = mDatabase.searchInfor(searchWord);
-                if(searchResultsAccessCodes.isEmpty()){
-                    searchResults.add("There is no result");
-                    searchResultsAccessCodes.add(-1);
-                }else{
-                    searchResults = mDatabase.getSearchResultList();
-                }
+
+                searchResults = mDatabase.getSearchResultList();
+                SearchResultCustomAdapter adapter = new SearchResultCustomAdapter(mContext, searchResults, mDatabase.getSearchCategoryIndex());
+
+                searchResultListView.setAdapter(adapter);
+
             }
 
 
-            final ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, searchResults);
-            searchResultListView.setAdapter(adapter);
 
 
 
