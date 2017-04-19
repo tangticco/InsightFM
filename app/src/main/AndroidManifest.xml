@@ -47,6 +47,9 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".EmailPasswordActivity" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".AnonymousAuthActivity"></activity>
     </application>
 
 </manifest>
