@@ -2,6 +2,7 @@ package edu.fandm.ztang.insightfm;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -27,7 +28,7 @@ import java.net.URL;
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
-public class ExtendedInfoWindowActivity extends AppCompatActivity {
+public class ExtendedInfoWindowActivity extends MainContentActivity {
 
     private InsightSingletonDatabase mDatabase;
 
@@ -45,30 +46,32 @@ public class ExtendedInfoWindowActivity extends AppCompatActivity {
 
         //retrieve the class type and info ID
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            setContentView(R.layout.activity_extended_info_window);
+
+        setContentView(R.layout.activity_extended_info_window);
 
 
-            //get an instance of the database
-            mDatabase = InsightSingletonDatabase.getInstance(this);
+        //get an instance of the database
+        mDatabase = InsightSingletonDatabase.getInstance(this);
 
-            inforID = b.getInt("INFOID");
-            position = b.getInt("Position");
-            classType = b.getString("ClassType");
+        inforID = b.getInt("INFOID");
+        position = b.getInt("Position");
+        classType = b.getString("ClassType");
 
-            //set the info window's characteristic to the class type
-            TextView classTypeTextView = (TextView)findViewById(R.id.classType);
-            classTypeTextView.setText(classType);
+        //set the info window's characteristic to the class type
+        TextView classTypeTextView = (TextView)findViewById(R.id.classType);
+        classTypeTextView.setText(classType);
 
-            infoTitle= (TextView)findViewById(R.id.infoTitle);
-            setInfoTitle();
+        infoTitle= (TextView)findViewById(R.id.infoTitle);
+        setInfoTitle();
 
-            //Fetch data from the website
-            new InternetRequest().execute("https://www.fandm.edu");
+        //Fetch data from the website
+        new InternetRequest().execute("https://www.fandm.edu");
 
-        }else{
-            setContentView(R.layout.activity_error);
-        }
+
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private class InternetRequest  extends AsyncTask<String, Void, String>{

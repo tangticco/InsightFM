@@ -156,7 +156,7 @@ public class MainContentActivity extends AppCompatActivity
             startActivity(intent);
 
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_map) {
 
 
         } else if (id == R.id.nav_slideshow) {

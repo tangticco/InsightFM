@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +32,7 @@ import java.util.Locale;
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends MainContentActivity {
 
     //search engine database variables
     private InsightSingletonDatabase mDatabase;
@@ -59,12 +60,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-
-        //Set up the navigation tool bar
-        //TODO implement the toolbar (back to main activity)
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //get an instance of the database
         mDatabase = InsightSingletonDatabase.getInstance(mContext);
@@ -118,6 +113,9 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
