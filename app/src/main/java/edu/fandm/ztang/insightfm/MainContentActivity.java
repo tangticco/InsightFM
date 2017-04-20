@@ -34,7 +34,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +46,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -57,12 +61,18 @@ public class MainContentActivity extends BaseActivity
         implements  OnMapReadyCallback {
 
 
+    //Test
+    private String TAG = "MainActivity: ";
+
+
     //Google map related variables
     private GoogleMap mMap;
     private Map<String, LatLng> mapMarkers = new Hashtable<String, LatLng>();
     private UiSettings mUiSettings;
     private static final int MY_LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int LOCATION_LAYER_PERMISSION_REQUEST_CODE = 2;
+    private static final int InternetConnection_REQUEST_CODE = 3;
+    private static final int WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE = 4;
     private boolean mLocationPermissionDenied = false;
     private CheckBox mMyLocationButtonCheckbox;
     private CheckBox mMyLocationLayerCheckbox;
@@ -74,24 +84,23 @@ public class MainContentActivity extends BaseActivity
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        //Update the profile image and related info accoording to currently signed in user
+        updateProfile();
 
 
 
-        //////////////////////////////
-        //get netword permission
-        //TODO check internet permission
-        ConnectivityManager check = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] info = check.getAllNetworkInfo();
-        for (int i = 0; i<info.length; i++){
-            if (info[i].getState() == NetworkInfo.State.CONNECTED){
-                Toast.makeText(mContext, "Internet is connected", Toast.LENGTH_SHORT).show();
-            }
-        }
+
 
 
         //Initialize a InsightDatabaseModel
@@ -106,8 +115,8 @@ public class MainContentActivity extends BaseActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
 
@@ -133,7 +142,12 @@ public class MainContentActivity extends BaseActivity
         mUiSettings.setZoomControlsEnabled(isChecked(R.id.zoom_buttons_toggle));
         mUiSettings.setCompassEnabled(isChecked(R.id.compass_toggle));
         mUiSettings.setMyLocationButtonEnabled(isChecked(R.id.mylocationbutton_toggle));
-        mMap.setMyLocationEnabled(isChecked(R.id.mylocationlayer_toggle));
+        try{
+            mMap.setMyLocationEnabled(isChecked(R.id.mylocationlayer_toggle));
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
+
         mUiSettings.setScrollGesturesEnabled(isChecked(R.id.scroll_toggle));
         mUiSettings.setZoomGesturesEnabled(isChecked(R.id.zoom_gestures_toggle));
         mUiSettings.setTiltGesturesEnabled(isChecked(R.id.tilt_toggle));
@@ -262,11 +276,6 @@ public class MainContentActivity extends BaseActivity
     ////////////////////////////////
     /////Controller class
     ////////////////////////////////
-    public void newUserSignIn(View v){
-        Intent intent = new Intent(this, AnonymousAuthActivity.class);
-
-        startActivity(intent);
-    }
 
 
 
@@ -285,7 +294,7 @@ public class MainContentActivity extends BaseActivity
      */
     public void getPermissions(){
 
-        String[] perms = new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(this, perms, 1);
 
     }
@@ -321,7 +330,12 @@ public class MainContentActivity extends BaseActivity
                 // Enable the My Location layer if the permission has been granted.
                 if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                         Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    mMap.setMyLocationEnabled(true);
+                    try{
+                        mMap.setMyLocationEnabled(true);
+                    }catch (SecurityException e){
+                        e.printStackTrace();
+                    }
+
                     mMyLocationLayerCheckbox.setChecked(true);
                 } else {
                     mLocationPermissionDenied = true;

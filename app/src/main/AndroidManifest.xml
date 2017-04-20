@@ -32,6 +32,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD3oHlBZpwK7ZLNx6xFwS_OgJBTjXPWTD4" />
 
+        <!-- facebook App ID -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity android:name=".ExtendedInfoWindowActivity" />
         <activity
             android:name=".MainContentActivity"
@@ -47,9 +52,8 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EmailPasswordActivity" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".AnonymousAuthActivity"></activity>
+        <activity android:name=".FacebookLoginActivity"></activity>
     </application>
 
 </manifest>

@@ -1,8 +1,15 @@
 package edu.fandm.ztang.insightfm;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,14 +19,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.io.BufferedInputStream;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
+
+
+    //test
+    private String TAG = "Base: ";
+
+
+    //Firebase Auth
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -47,6 +77,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     public void showProgressDialog() {
@@ -71,6 +102,67 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         hideProgressDialog();
     }
 
+
+    /**
+     * Update the profile image and related info accoording to currently signed in user
+     */
+    public void updateProfile(){
+        // [START initialize_auth]
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+        final FirebaseUser user = mAuth.getCurrentUser();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        if (user != null) {
+            // User is signed in
+
+            //get the user's public profile
+            View headerLayout = navigationView.getHeaderView(0);
+            TextView userName = (TextView)headerLayout.findViewById(R.id.userName);
+            TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmail);
+            final ImageView userProfileImage = (ImageView)headerLayout.findViewById(R.id.userProfileImage);
+
+            userName.setText(user.getDisplayName());
+            userEmail.setText(user.getEmail());
+
+            Thread downloadThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    try {
+                        URL aURL = new URL(user.getPhotoUrl().toString());
+                        URLConnection conn = aURL.openConnection();
+                        conn.connect();
+                        InputStream is = conn.getInputStream();
+                        BufferedInputStream bis = new BufferedInputStream(is);
+                        final Bitmap bm = BitmapFactory.decodeStream(bis);
+                        bis.close();
+                        is.close();
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userProfileImage.setImageBitmap(bm);
+                            }
+                        });
+
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error getting bitmap", e);
+                    }
+
+
+
+
+                }
+            });
+            downloadThread.start();
+
+
+
+        }
+    }
 
 
     @Override
@@ -119,6 +211,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_map) {
 
+            Intent intent = new Intent(this, MainContentActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -134,4 +229,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    public void newUserSignIn(View v){
+        Intent intent = new Intent(this, FacebookLoginActivity.class);
+
+        startActivity(intent);
+    }
+
 }
