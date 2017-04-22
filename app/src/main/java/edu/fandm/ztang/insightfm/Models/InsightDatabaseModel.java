@@ -1,7 +1,9 @@
 package edu.fandm.ztang.insightfm.Models;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -22,59 +24,114 @@ import java.util.ArrayList;
 
 public class InsightDatabaseModel {
 
-    ///////////////////////
+    ////////////////////////////////////
     ///FM Related Classes
-    //////////////////////
+    ////////////////////////////////////
 
+    /**
+     * This is a super class for FM resources like Office, Instructors, etc.
+     */
     public static class FMResource{
+
+        //Super-Variables pre-defined for all sub-classes
         String classType;
-        String resourceTitle;
-        LatLng recourseLocation = new LatLng(40.046096674063996,-76.31949618458748);
+        String resourceTitle ;
+        LatLng recourseLocation;
         int infoID;
 
-        ////////////////////////////////////
+
+        public FMResource(){
+            classType = "FMResource";
+            resourceTitle = "FMResource";
+            recourseLocation = new LatLng(40.046096674063996,-76.31949618458748);   //default location of the resource which is the location of stager hall
+            infoID = -1;    //default infoID for non-end entries
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Setter methods
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Set the class type of specific child classes
+         * @param classType
+         */
         public void setClassType(String classType) {
             this.classType = classType;
         }
 
+        /**
+         * Set the resource title for specific child class. This title should be a understandable title for that specific resource
+         * @param resourceTitle
+         */
         public void setResourceTitle(String resourceTitle) {
             this.resourceTitle = resourceTitle;
         }
 
-        public LatLng getRecourseLocation() {
-            return recourseLocation;
-        }
-
-        public int getInfoID() {
-            return infoID;
-        }
-
-        ////////////////////////////////////
-        //Getter methods
-        ////////////////////////////////////
-        public String getClassType() {
-            return classType;
-        }
-
-        public String getResourceTitle() {
-            return resourceTitle;
-        }
-
+        /**
+         * Set the reource location for that specific resource
+         * @param recourseLocation
+         */
         public void setRecourseLocation(LatLng recourseLocation) {
             this.recourseLocation = recourseLocation;
         }
 
+        /**
+         * Set the infoID (index in the storage list) for that specific resource
+         * Default is -1 (for non-end entry, non-existent entry)
+         * @param infoID
+         */
         public void setInfoID(int infoID) {
             this.infoID = infoID;
         }
+
+
+
+        ////////////////////////////////////
+        //Getter methods
+        ////////////////////////////////////
+
+        /**
+         * Get the class type of this resource
+         * @return class type in string
+         */
+        public String getClassType() {
+            return classType;
+        }
+
+        /**
+         * Get the resource title of that resource
+         * @return resource title
+         */
+        public String getResourceTitle() {
+            return resourceTitle;
+        }
+
+        /**
+         * Return the location of the resource
+         * @return location of the resource
+         */
+        public LatLng getRecourseLocation() {
+            return recourseLocation;
+        }
+
+        /**
+         * Return the infoID (index of storage list) of that specific resource
+         * @return
+         */
+        public int getInfoID() {
+            return infoID;
+        }
+
+
     }
 
     /**
      * A class that implement the information structure of a building
      */
     public static class Building extends FMResource{
+
+
         //Building class attributes
         private String buildingName;
         private String buildingDescription;
@@ -84,7 +141,20 @@ public class InsightDatabaseModel {
         private ArrayList<Department> departments;
 
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Default constructor
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public Building(){
+            super();
+            floors = new ArrayList<>();
+            departments = new ArrayList<>();
+            this.setClassType("Building");
+        }
+
+
         public Building(String BUILDINGNAME){
+            super();
             buildingName = BUILDINGNAME;
             floors = new ArrayList<>();
             departments = new ArrayList<>();
@@ -92,28 +162,36 @@ public class InsightDatabaseModel {
             this.setResourceTitle(buildingName);
         }
 
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Getter methods
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public String getBuildingName() {
             return buildingName;
-        }
-
-        public ArrayList<Floor> getFloors() {
-            return floors;
         }
 
         public String getBuildingDescription() {
             return buildingDescription;
         }
 
+        public ArrayList<Floor> getFloors() {
+            return floors;
+        }
+
         public ArrayList<Department> getDepartments() {
             return departments;
         }
 
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Setter methods
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void setFloors(ArrayList<Floor> floors) {
+            this.floors = floors;
+        }
+
+        public void setDepartments(ArrayList<Department> departments) {
+            this.departments = departments;
+        }
+
         public void addFloor(Floor newFloor){
             floors.add(newFloor);
         }
@@ -122,7 +200,10 @@ public class InsightDatabaseModel {
             departments.add(newDeparment);
         }
 
-
+        public void setBuildingName(String buildingName) {
+            this.buildingName = buildingName;
+            this.setResourceTitle(buildingName);
+        }
 
         public void setBuildingDescription(String buildingDescription) {
             this.buildingDescription = buildingDescription;
@@ -143,7 +224,19 @@ public class InsightDatabaseModel {
         private String floorName;
 
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////Default Constructors
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public Floor(){
+            super();
+            classrooms = new ArrayList<>();
+            offices = new ArrayList<>();
+            this.setClassType("Floor");
+        }
+
+
         public Floor(String FLOORNAME){
+            super();
             floorName = FLOORNAME;
             classrooms = new ArrayList<>();
             offices = new ArrayList<>();
@@ -151,8 +244,13 @@ public class InsightDatabaseModel {
             this.setResourceTitle(getFloorBuilding().getBuildingName() + floorName);
         }
 
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////Getter Methods
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public String getFloorName() {
             return floorName;
+
         }
 
         public Building getFloorBuilding() {
@@ -167,6 +265,10 @@ public class InsightDatabaseModel {
             return offices;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////Setter Methods
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public void addClassroom(Classroom newClassroom){
             classrooms.add(newClassroom);
         }
@@ -179,8 +281,23 @@ public class InsightDatabaseModel {
             floorBuilding = refBuilding;
         }
 
+        public void setFloorBuilding(Building floorBuilding) {
+            this.floorBuilding = floorBuilding;
+            this.setResourceTitle(getFloorBuilding().getBuildingName() + floorName);
+        }
 
-        //TODO add more getter methods
+        public void setFloorName(String floorName) {
+            this.floorName = floorName;
+            this.setResourceTitle(getFloorBuilding().getBuildingName() + floorName);
+        }
+
+        public void setClassrooms(ArrayList<Classroom> classrooms) {
+            this.classrooms = classrooms;
+        }
+
+        public void setOffices(ArrayList<Office> offices) {
+            this.offices = offices;
+        }
     }
 
     /**
@@ -193,18 +310,69 @@ public class InsightDatabaseModel {
         private Floor classRoomFloor;
 
         ArrayList<Course> courses;
-        int roomNumber;
+        String roomNumber;
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Default Constructors
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public Classroom(){
+            super();
+            courses = new ArrayList<>();
+            setClassType("Classroom");
+        }
 
-        public Classroom(int ROOMNUMBER){
+        public Classroom(String ROOMNUMBER){
+            super();
             roomNumber = ROOMNUMBER;
             courses = new ArrayList<>();
             setClassType("Classroom");
             this.setResourceTitle(String.valueOf(roomNumber));
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Getter Methods
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public Building getClassRoomBuilding() {
+            return classRoomBuilding;
+        }
+
+        public Floor getClassRoomFloor() {
+            return classRoomFloor;
+        }
+
+        public ArrayList<Course> getCourses() {
+            return courses;
+        }
+
+        public String getRoomNumber() {
+            return roomNumber;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Setter Methods
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+        public void setClassRoomBuilding(Building classRoomBuilding) {
+            this.classRoomBuilding = classRoomBuilding;
+        }
+
+        public void setClassRoomFloor(Floor classRoomFloor) {
+            this.classRoomFloor = classRoomFloor;
+        }
+
+        public void setCourses(ArrayList<Course> courses) {
+            this.courses = courses;
+        }
+
+        public void addCourse(Course newCourse){
+            this.courses.add(newCourse);
+        }
+
+        public void setRoomNumber(String roomNumber) {
+            this.roomNumber = roomNumber;
+        }
     }
 
     /**
@@ -220,8 +388,12 @@ public class InsightDatabaseModel {
         String roomNumber;
         Instructor officeInstructor;
 
-        public Office(String ROOMNUMBER){
+        public Office(){
+            super();
+        }
 
+        public Office(String ROOMNUMBER){
+            super();
             //set office class attributes
             roomNumber = ROOMNUMBER;
 
@@ -255,13 +427,16 @@ public class InsightDatabaseModel {
         public void setOfficeBuilding(Building officeBuilding) {
             this.officeBuilding = officeBuilding;
         }
-
         public void setOfficeFloor(Floor officeFloor) {
             this.officeFloor = officeFloor;
         }
 
         public void setOfficeInstructor(Instructor officeInstructor) {
             this.officeInstructor = officeInstructor;
+        }
+
+        public void setRoomNumber(String roomNumber) {
+            this.roomNumber = roomNumber;
         }
     }
 
@@ -357,14 +532,30 @@ public class InsightDatabaseModel {
 
         //Course values
         private ArrayList<Session> sessions;
+        private ArrayList<Book> books;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Default Constructors
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public Course(){
+            super();
+
+            //Initialize course class values
+            sessions = new ArrayList<>();
+
+            //set super class attributes
+            setClassType("Course");
+        }
 
         public Course(String Subj, int courseNum, String Title, Department departName){
+            super();
 
             //set class attributes
-            subj = Subj;
-            depart = departName;
+            this.subj = Subj;
             this.courseNum = courseNum;
-            title = Title;
+            this.title = Title;
+            this.depart = departName;
 
             //Initialize course class values
             sessions = new ArrayList<>();
@@ -377,6 +568,10 @@ public class InsightDatabaseModel {
         ////////////////////////////////////
         //Getter methods
         ////////////////////////////////////
+        public Department getDepart() {
+            return depart;
+        }
+
         public String getSubj() {
             return subj;
         }
@@ -393,17 +588,22 @@ public class InsightDatabaseModel {
             return courseDescription;
         }
 
-        public Department getDepart() {
-            return depart;
-        }
-
         public ArrayList<Session> getSessions() {
             return sessions;
+        }
+
+        public ArrayList<Book> getBooks() {
+            return books;
         }
 
         ////////////////////////////////////
         //Setter methods
         ////////////////////////////////////
+
+        public void setDepart(Department depart) {
+            this.depart = depart;
+        }
+
         public void setSubj(String subj) {
             this.subj = subj;
         }
@@ -420,18 +620,27 @@ public class InsightDatabaseModel {
             courseDescription = description;
         }
 
+        public void setSessions(ArrayList<Session> sessions) {
+            this.sessions = sessions;
+        }
+
         public void addSession(Session newSession){
             sessions.add(newSession);
         }
 
+        public void setBooks(ArrayList<Book> books) {
+            this.books = books;
+        }
 
-
+        public void addBook(Book newBook){
+            this.books.add(newBook);
+        }
     }
 
     /**
      * A Class that implement the information structure of a session
      */
-    public  static class Session extends FMResource{
+    public static class Session extends FMResource{
 
         //Session Reference
         private Building building;
@@ -445,7 +654,15 @@ public class InsightDatabaseModel {
         private String end;
         private Instructor instructor;
 
+        public Session(){
+            super();
+            //Set super class attributes
+            setClassType("Session");
+        }
+
+
         public Session(int CRN, Building Building, String Room, String Days, String Begin, String End, Instructor Instructor, Course sessionCourse){
+            super();
 
             //set session class attributes
             crn = CRN;
@@ -463,9 +680,45 @@ public class InsightDatabaseModel {
         }
 
 
-        ////////////////////////////////////
+        ///////////////////////////////////////////////////////////
+        //Getter methods
+        ///////////////////////////////////////////////////////////
+        public int getCrn() {
+            return crn;
+        }
+
+        public Building getBuilding() {
+            return building;
+        }
+
+        public String getRoom() {
+            return room;
+        }
+
+        public String getDays() {
+            return days;
+        }
+
+        public String getBegin() {
+            return begin;
+        }
+
+        public String getEnd() {
+            return end;
+        }
+
+        public Instructor getInstructor() {
+            return instructor;
+        }
+
+        public Course getSessionCourse() {
+            return sessionCourse;
+        }
+
+
+        ///////////////////////////////////////////////////////////
         //Setter methods
-        ////////////////////////////////////
+        ///////////////////////////////////////////////////////////
         public void setCrn(int CRN){
             crn = CRN;
         }
@@ -498,47 +751,12 @@ public class InsightDatabaseModel {
         public void setSessionCourse(Course sessionCourse) {
             this.sessionCourse = sessionCourse;
         }
-
-        ////////////////////////////////////
-        //Getter methods
-        ////////////////////////////////////
-        public int getCrn() {
-            return crn;
-        }
-
-        public Building getBuilding() {
-            return building;
-        }
-
-        public String getRoom() {
-            return room;
-        }
-
-        public String getDays() {
-            return days;
-        }
-
-        public String getBegin() {
-            return begin;
-        }
-
-        public String getEnd() {
-            return end;
-        }
-
-        public Instructor getInstructor() {
-            return instructor;
-        }
-
-        public Course getSessionCourse() {
-            return sessionCourse;
-        }
     }
 
     /**
      * Implement a class Instructor to store information of a instructor
      */
-    public  static class Instructor extends FMResource{
+    public static class Instructor extends FMResource{
 
         //Instructor reference
         private Office office;
@@ -552,7 +770,22 @@ public class InsightDatabaseModel {
         //Instructor values
         private ArrayList<Course> teachingCourses;
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Default Constructors
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public Instructor(){
+            super();
+
+            //initialize instructor class values
+            teachingCourses = new ArrayList<>();
+
+            //set super class attributes
+            setClassType("Instructor");
+        }
+
         public Instructor(String FULLNAME){
+            super();
 
             //set instructor class attributes
             fullName = FULLNAME;
@@ -567,59 +800,257 @@ public class InsightDatabaseModel {
 
 
 
-        ////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Getter methods
-        ////////////////////////////////////
-        public String getEmailAddress() {
-            return emailAddress;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public Office getOffice() {
+            return office;
         }
 
         public String getFullName() {
             return fullName;
         }
 
-        public String getInstructorDescription() {
-            return instructorDescription;
-        }
-
-        public Office getOffice() {
-            return office;
-        }
-
-        public ArrayList<Course> getTeachingCourses() {
-            return teachingCourses;
+        public String getEmailAddress() {
+            return emailAddress;
         }
 
         public String getPhoneNumber() {
             return phoneNumber;
         }
 
+        public String getInstructorDescription() {
+            return instructorDescription;
+        }
+
+        public ArrayList<Course> getTeachingCourses() {
+            return teachingCourses;
+        }
+
         ////////////////////////////////////
         //Setter methods
         ////////////////////////////////////
-        public void setEmailAddress(String emailAddress) {
-            this.emailAddress = emailAddress;
+        public void setOffice(Office office) {
+            this.office = office;
         }
 
         public void setFullName(String fullName) {
             this.fullName = fullName;
         }
 
-        public void setInstructorDescription(String instructorDescription) {
-            this.instructorDescription = instructorDescription;
+        public void setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
         }
 
-        public void setOffice(Office office) {
-            this.office = office;
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
+
+        public void setInstructorDescription(String instructorDescription) {
+            this.instructorDescription = instructorDescription;
         }
 
         public void addTeachingOffice(Course newCourse){
             teachingCourses.add(newCourse);
         }
 
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
+        public void setTeachingCourses(ArrayList<Course> teachingCourses) {
+            this.teachingCourses = teachingCourses;
         }
     }
+
+
+
+    ////////////////////////////////////
+    ////Selling Related Class
+    ////////////////////////////////////
+    public static class Book{
+
+        //Book attributes
+        String bookTitle;
+        String bookAuthor;
+        String ISBN;
+
+
+
+        //Seller info and price
+        ArrayList<sellingItem> onsaleItems;
+
+
+        //Book Reference
+        Course requiredCourse;
+        Instructor requiredInstructor;
+
+        public Book(){
+
+        }
+
+        public Book(String bookTitle, Course belongCourse){
+            this.bookTitle = bookTitle;
+            requiredCourse = belongCourse;
+
+            onsaleItems = new ArrayList<>();
+        }
+
+    }
+
+    public static class sellingItem{
+
+        //Item Attributes
+        User itemSeller;
+        Double sellingPrice;
+        Double originalPrice;
+        Integer itemCondition; // 1-5, new to very used
+        String itemDescription;
+
+
+        //Item reference
+        Book belongedBook;
+
+        ////////////////////////////////////
+        ///Default Constructor
+        ////////////////////////////////////
+
+        public sellingItem(){
+
+        }
+
+        public sellingItem(User seller, Double sellingPrice, Double originalPrice, Integer itemCondition, String itemDescription, Book belongedBook){
+            this.itemSeller = seller;
+            this.sellingPrice = sellingPrice;
+            this.originalPrice = originalPrice;
+            this.itemCondition = itemCondition;
+            this.itemDescription = itemDescription;
+            this.belongedBook = belongedBook;
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////
+        /////Getter Methods
+        ////////////////////////////////////////////////////////////////////////
+
+        public User getItemSeller() {
+            return itemSeller;
+        }
+
+        public Double getSellingPrice() {
+            return sellingPrice;
+        }
+
+        public Double getOriginalPrice() {
+            return originalPrice;
+        }
+
+        public Integer getItemCondition() {
+            return itemCondition;
+        }
+
+        public String getItemDescription() {
+            return itemDescription;
+        }
+
+        public Book getBelongedBook() {
+            return belongedBook;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        ////Setter Methods
+        ////////////////////////////////////////////////////////////////////////
+
+
+        public void setItemSeller(User itemSeller) {
+            this.itemSeller = itemSeller;
+        }
+
+        public void setSellingPrice(Double sellingPrice) {
+            this.sellingPrice = sellingPrice;
+        }
+
+        public void setOriginalPrice(Double originalPrice) {
+            this.originalPrice = originalPrice;
+        }
+
+        public void setItemCondition(Integer itemCondition) {
+            this.itemCondition = itemCondition;
+        }
+
+        public void setItemDescription(String itemDescription) {
+            this.itemDescription = itemDescription;
+        }
+
+        public void setBelongedBook(Book belongedBook) {
+            this.belongedBook = belongedBook;
+        }
+    }
+
+    ////////////////////////////////////
+    ////User Related Class
+    ////////////////////////////////////
+
+    public static class User{
+
+        //User Profile
+        String userDisplayedName;
+        String userEmail;
+        Uri userPhotoUri;
+        String userPhoneNumber;
+        String userClass;
+        String userMajor;
+        String firstname;
+        String lastName;
+        String userID;
+
+
+        ////////////////////////////////////////////////////////////////////////
+        ////Default Constructor
+        ////////////////////////////////////////////////////////////////////////
+        public User(){
+
+        }
+
+        public User(String userDisplayedName, String userEmail, Uri userPhotoUri, String userID){
+            this.userDisplayedName = userDisplayedName;
+            this.userEmail = userEmail;
+            this.userPhotoUri = userPhotoUri;
+            this.userID = userID;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //////Getter Methods
+        ////////////////////////////////////////////////////////////////////////
+
+
+        public String getUserDisplayedName() {
+            return userDisplayedName;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
+        }
+
+        public Uri getUserPhotoUri() {
+            return userPhotoUri;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        /////Setter methods
+        ////////////////////////////////////////////////////////////////////////
+
+
+        public void setUserDisplayedName(String userDisplayedName) {
+            this.userDisplayedName = userDisplayedName;
+        }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+
+        public void setUserPhotoUri(Uri userPhotoUri) {
+            this.userPhotoUri = userPhotoUri;
+        }
+
+    }
+
+
 
 }

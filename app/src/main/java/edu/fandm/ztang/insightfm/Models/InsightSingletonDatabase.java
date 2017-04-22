@@ -72,6 +72,10 @@ public class InsightSingletonDatabase {
     private LatLng newMapLocation;
 
 
+    //user-related variables
+    private InsightDatabaseModel.User currentUser;
+
+
     /**
      * A private default constructor
      * @param pContext
@@ -96,6 +100,9 @@ public class InsightSingletonDatabase {
         buildingTrie = new InfoSearchModel.Trie(false, -1);
         instructorTrie = new InfoSearchModel.Trie(false, -1);
         wordList = new ArrayList<>();
+        inforIDlist = new ArrayList<>();
+        searchCategoryIndex = new ArrayList<>();
+
 
 
         //initialize mapMarkerLat;
@@ -112,6 +119,13 @@ public class InsightSingletonDatabase {
         setupDepartURL();
 
         Toast.makeText(mContext, "Database Complete", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Blank constructor for Firebase use
+     */
+    public InsightSingletonDatabase(){
+
     }
 
     /**
@@ -185,7 +199,6 @@ public class InsightSingletonDatabase {
         return inforIDlist;
 
     }
-
 
     public ArrayList<Integer> fuzzysearchInfor(String searchWord){
 
@@ -333,6 +346,9 @@ public class InsightSingletonDatabase {
             }
     }
 
+    public InsightDatabaseModel.User getCurrentUser() {
+        return currentUser;
+    }
 
     ////////////Map related
     public Boolean isMapNeedChange(){
@@ -629,5 +645,9 @@ public class InsightSingletonDatabase {
 
     public void setNewMapLocation(LatLng newMapLocation) {
         this.newMapLocation = newMapLocation;
+    }
+
+    public void setCurrentUser(InsightDatabaseModel.User currentUser) {
+        this.currentUser = currentUser;
     }
 }

@@ -42,6 +42,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
+import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
 /**
  * Demonstrate Firebase Authentication using a Facebook access token.
@@ -66,6 +74,12 @@ public class FacebookLoginActivity extends BaseActivity implements
 
     private CallbackManager mCallbackManager;
 
+    private FirebaseDatabase firebaseDatabase;
+
+    private InsightSingletonDatabase mdataBase;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,23 +92,46 @@ public class FacebookLoginActivity extends BaseActivity implements
         findViewById(R.id.button_facebook_signout).setOnClickListener(this);
 
         // [START initialize_auth]
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and database
         mAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        mdataBase = InsightSingletonDatabase.getInstance(this);
         // [END initialize_auth]
 
         // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
 
+                    String userID = user.getUid();
+                    DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
+
+                    currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                mdataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
+                            }else{
+                                InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl(), user.getUid());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    // User is signed in
+                    updateProfile();
                     //test output
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+
+                    updateProfile();
                 }
                 // [START_EXCLUDE]
                 updateUI(user);
@@ -138,6 +175,8 @@ public class FacebookLoginActivity extends BaseActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     // [START on_start_add_listener]

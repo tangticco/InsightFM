@@ -1,15 +1,11 @@
 package edu.fandm.ztang.insightfm;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -30,8 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.BufferedInputStream;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -114,14 +108,17 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         final FirebaseUser user = mAuth.getCurrentUser();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
+
+        //get the user's public profile
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView userName = (TextView)headerLayout.findViewById(R.id.userName);
+        TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmailTitle);
+        final ImageView userProfileImage = (ImageView)headerLayout.findViewById(R.id.userProfileImage);
+
+
         if (user != null) {
             // User is signed in
 
-            //get the user's public profile
-            View headerLayout = navigationView.getHeaderView(0);
-            TextView userName = (TextView)headerLayout.findViewById(R.id.userName);
-            TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmail);
-            final ImageView userProfileImage = (ImageView)headerLayout.findViewById(R.id.userProfileImage);
 
             userName.setText(user.getDisplayName());
             userEmail.setText(user.getEmail());
@@ -129,8 +126,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             Thread downloadThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-
-
                     try {
                         URL aURL = new URL(user.getPhotoUrl().toString());
                         URLConnection conn = aURL.openConnection();
@@ -151,15 +146,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                     } catch (IOException e) {
                         Log.e(TAG, "Error getting bitmap", e);
                     }
-
-
-
-
                 }
             });
             downloadThread.start();
-
-
+        }else{
 
         }
     }
@@ -232,9 +222,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void newUserSignIn(View v){
-        Intent intent = new Intent(this, FacebookLoginActivity.class);
+        // [START initialize_auth]
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+        final FirebaseUser user = mAuth.getCurrentUser();
 
-        startActivity(intent);
+        if(user != null){
+            Intent intent = new Intent(this, AccountProfileActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, FacebookLoginActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

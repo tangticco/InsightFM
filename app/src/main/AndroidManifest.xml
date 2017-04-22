@@ -53,7 +53,9 @@
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".FacebookLoginActivity"></activity>
+        <activity android:name=".FacebookLoginActivity" />
+        <activity android:name=".bookOnSaleActivity" />
+        <activity android:name=".AccountProfileActivity"></activity>
     </application>
 
 </manifest>

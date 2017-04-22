@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "edu.fandm.ztang.insightfm"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 3
         versionName "0.2"
@@ -39,6 +39,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     testCompile 'junit:junit:4.12'
 }
+
+
 
 
 

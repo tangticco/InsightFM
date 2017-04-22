@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:openDrawer="start">
+
+<include
+    layout="@layout/app_bar_main_content_withoutfab"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="edu.fandm.ztang.insightfm.AccountProfileActivity">
+
+        <TextView
+            android:id="@+id/accountProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="serif"
+            android:text="Account Profile"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="175dp"
+            tools:layout_editor_absoluteY="39dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/usernameTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView"
+            android:layout_marginLeft="70dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="38dp"
+            android:fontFamily="serif"
+            android:text="Username: "
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="31dp"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+            android:layout_below="@+id/accountProfile"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/fullNameTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/usernameTitle"
+            android:layout_alignRight="@+id/usernameTitle"
+            android:layout_below="@+id/usernameTitle"
+            android:layout_marginTop="14dp"
+            android:fontFamily="serif"
+            android:text="Full Name: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/userEmailTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/fullNameTitle"
+            android:layout_alignStart="@+id/fullNameTitle"
+            android:layout_below="@+id/fullNameTitle"
+            android:layout_marginTop="17dp"
+            android:fontFamily="serif"
+            android:text="Email: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/userPhoneTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/userEmailTitle"
+            android:layout_alignStart="@+id/userEmailTitle"
+            android:layout_below="@+id/userEmailTitle"
+            android:layout_marginTop="17dp"
+            android:fontFamily="serif"
+            android:text="Phone: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/userClassTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/userPhoneTitle"
+            android:layout_alignStart="@+id/userPhoneTitle"
+            android:layout_below="@+id/userPhoneTitle"
+            android:layout_marginTop="14dp"
+            android:fontFamily="serif"
+            android:text="Class"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/userMajorTitle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/userClassTitle"
+            android:layout_alignStart="@+id/userClassTitle"
+            android:layout_below="@+id/userClassTitle"
+            android:layout_marginTop="14dp"
+            android:fontFamily="serif"
+            android:text="Major: "
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userMajorTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Save Changes" />
+
+        <EditText
+            android:id="@+id/userNamePlace"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/usernameTitle"
+            android:layout_alignBottom="@+id/usernameTitle"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="17dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Enter username"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/userFullNamePlace"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/userEmailPlace"
+            android:layout_alignStart="@+id/userNamePlace"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Enter full name"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/userEmailPlace"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/userPhonePlace"
+            android:layout_alignStart="@+id/userFullNamePlace"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:text="Enter Email"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/userPhonePlace"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/userClassPlace"
+            android:layout_alignStart="@+id/userEmailPlace"
+            android:ems="10"
+            android:inputType="phone"
+            android:text="Enter Phone Number"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/userClassPlace"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/userMajor"
+            android:layout_alignStart="@+id/userPhonePlace"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Enter class"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/userMajor"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/userClassPlace"
+            android:layout_below="@+id/userClassTitle"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Enter Major"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+
+<android.support.design.widget.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:headerLayout="@layout/nav_header_main_content"
+    app:menu="@menu/activity_main_content_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
+
+
