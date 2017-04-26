@@ -72,8 +72,12 @@ public class InsightSingletonDatabase {
     private LatLng newMapLocation;
 
 
-    //user-related variables
+    //user-related variable
     private InsightDatabaseModel.User currentUser;
+
+
+    //Book Selling related variables
+    private ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems;
 
 
     /**
@@ -117,6 +121,9 @@ public class InsightSingletonDatabase {
 
         //set up department urls
         setupDepartURL();
+
+        //Initialize Selling related variables
+        allSellingItems = new ArrayList<>();
 
         Toast.makeText(mContext, "Database Complete", Toast.LENGTH_SHORT).show();
     }
@@ -268,6 +275,18 @@ public class InsightSingletonDatabase {
 
     }
 
+    public ArrayList<Integer> searchCourse(String searchWord){
+        inforIDlist = new ArrayList<>();
+        ArrayList<Integer> courseResult = courseTitleTrie.searchAllPossibleResult(searchWord);
+        if(!courseResult.isEmpty()){
+            inforIDlist.addAll(courseResult);
+        }else{
+            inforIDlist.add(-1);
+        }
+
+        return inforIDlist;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////getter methods
@@ -302,7 +321,9 @@ public class InsightSingletonDatabase {
         return departURL.get(departmentName);
     }
 
-    //TODO implement getter methods for floors, offices, and buildings.
+    public InsightDatabaseModel.User getCurrentUser() {
+        return currentUser;
+    }
 
     public ArrayList<String> getSearchResultList(){
 
@@ -346,8 +367,27 @@ public class InsightSingletonDatabase {
             }
     }
 
-    public InsightDatabaseModel.User getCurrentUser() {
-        return currentUser;
+    public ArrayList<InsightDatabaseModel.Sellingitem> getAllSellingItems() {
+
+        Log.d("get method", String.valueOf(this.allSellingItems.size()));
+        for(int i = 0; i < this.allSellingItems.size(); i++){
+            Log.d("Progress: ", this.allSellingItems.get(i).itemDescription);
+        }
+
+
+        return this.allSellingItems;
+    }
+
+    public ArrayList<String> getAllSellingItemsTitles(){
+        ArrayList<String> titles = new ArrayList<>();
+        for(int i = 0; i< allSellingItems.size(); i++){
+            titles.add(allSellingItems.get(i).getBelongedBook().getBookTitle());
+
+            //test
+            Log.d("progess: ", allSellingItems.get(i).getBelongedBook().getBookTitle());
+        }
+
+        return titles;
     }
 
     ////////////Map related
@@ -360,7 +400,7 @@ public class InsightSingletonDatabase {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////Helper functions
+    //////Setter Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -649,5 +689,14 @@ public class InsightSingletonDatabase {
 
     public void setCurrentUser(InsightDatabaseModel.User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public void setAllSellingItems(ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems) {
+        this.allSellingItems = allSellingItems;
+    }
+
+    public void addNewSellingItem(InsightDatabaseModel.Sellingitem newItem){
+        this.allSellingItems.add(newItem);
+        Log.d("Set method", String.valueOf(this.allSellingItems.size()));
     }
 }

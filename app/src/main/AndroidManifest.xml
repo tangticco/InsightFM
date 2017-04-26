@@ -55,7 +55,9 @@
         <activity android:name=".BaseActivity" />
         <activity android:name=".FacebookLoginActivity" />
         <activity android:name=".bookOnSaleActivity" />
-        <activity android:name=".AccountProfileActivity"></activity>
+        <activity android:name=".AccountProfileActivity" />
+        <activity android:name=".SellBookActivity" />
+        <activity android:name=".BookDetailActivity"></activity>
     </application>
 
 </manifest>

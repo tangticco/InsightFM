@@ -8,6 +8,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +25,9 @@ import java.util.ArrayList;
  */
 
 public class InsightDatabaseModel {
+
+
+
 
     ////////////////////////////////////
     ///FM Related Classes
@@ -867,19 +872,19 @@ public class InsightDatabaseModel {
     public static class Book{
 
         //Book attributes
-        String bookTitle;
-        String bookAuthor;
-        String ISBN;
+        private String bookTitle;
+        private String bookAuthor;
+        private String ISBN;
 
 
 
         //Seller info and price
-        ArrayList<sellingItem> onsaleItems;
+        private ArrayList<Sellingitem> onsaleItems;
 
 
         //Book Reference
-        Course requiredCourse;
-        Instructor requiredInstructor;
+        private Course requiredCourse;
+        private Instructor requiredInstructor;
 
         public Book(){
 
@@ -888,13 +893,64 @@ public class InsightDatabaseModel {
         public Book(String bookTitle, Course belongCourse){
             this.bookTitle = bookTitle;
             requiredCourse = belongCourse;
+            bookAuthor = "";
+            ISBN = "";
 
             onsaleItems = new ArrayList<>();
+            requiredInstructor = null;
         }
 
+
+        public ArrayList<Sellingitem> getOnsaleItems() {
+            return onsaleItems;
+        }
+
+        public String getBookAuthor() {
+            return bookAuthor;
+        }
+
+        public String getBookTitle() {
+            return bookTitle;
+        }
+
+        public String getISBN() {
+            return ISBN;
+        }
+
+        public Course getRequiredCourse() {
+            return requiredCourse;
+        }
+
+        public Instructor getRequiredInstructor() {
+            return requiredInstructor;
+        }
+
+        public void setBookAuthor(String bookAuthor) {
+            this.bookAuthor = bookAuthor;
+        }
+
+        public void setBookTitle(String bookTitle) {
+            this.bookTitle = bookTitle;
+        }
+
+        public void setISBN(String ISBN) {
+            this.ISBN = ISBN;
+        }
+
+        public void setOnsaleItems(ArrayList<Sellingitem> onsaleItems) {
+            this.onsaleItems = onsaleItems;
+        }
+
+        public void setRequiredCourse(Course requiredCourse) {
+            this.requiredCourse = requiredCourse;
+        }
+
+        public void setRequiredInstructor(Instructor requiredInstructor) {
+            this.requiredInstructor = requiredInstructor;
+        }
     }
 
-    public static class sellingItem{
+    public static class Sellingitem{
 
         //Item Attributes
         User itemSeller;
@@ -911,11 +967,11 @@ public class InsightDatabaseModel {
         ///Default Constructor
         ////////////////////////////////////
 
-        public sellingItem(){
+        public Sellingitem(){
 
         }
 
-        public sellingItem(User seller, Double sellingPrice, Double originalPrice, Integer itemCondition, String itemDescription, Book belongedBook){
+        public Sellingitem(User seller, Double sellingPrice, Double originalPrice, Integer itemCondition, String itemDescription, Book belongedBook){
             this.itemSeller = seller;
             this.sellingPrice = sellingPrice;
             this.originalPrice = originalPrice;
@@ -992,27 +1048,32 @@ public class InsightDatabaseModel {
         //User Profile
         String userDisplayedName;
         String userEmail;
-        Uri userPhotoUri;
-        String userPhoneNumber;
-        String userClass;
-        String userMajor;
-        String firstname;
-        String lastName;
+        String userPhotoUri;
+//        String userPhoneNumber;
+//        String userClass;
+//        String userMajor;
+//        String firstname;
+//        String lastName;
         String userID;
+
+        //User Attributes
+        ArrayList<Sellingitem> sellItems;
 
 
         ////////////////////////////////////////////////////////////////////////
         ////Default Constructor
         ////////////////////////////////////////////////////////////////////////
         public User(){
-
+            sellItems = new ArrayList<>();
         }
 
-        public User(String userDisplayedName, String userEmail, Uri userPhotoUri, String userID){
+        public User(String userDisplayedName, String userEmail, String userPhotoUri, String userID){
             this.userDisplayedName = userDisplayedName;
             this.userEmail = userEmail;
             this.userPhotoUri = userPhotoUri;
             this.userID = userID;
+
+            sellItems = new ArrayList<>();
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1028,8 +1089,16 @@ public class InsightDatabaseModel {
             return userEmail;
         }
 
-        public Uri getUserPhotoUri() {
+        public String getUserPhotoUri() {
             return userPhotoUri;
+        }
+
+        public String getUserID() {
+            return userID;
+        }
+
+        public ArrayList<Sellingitem> getSellItems() {
+            return sellItems;
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1045,10 +1114,21 @@ public class InsightDatabaseModel {
             this.userEmail = userEmail;
         }
 
-        public void setUserPhotoUri(Uri userPhotoUri) {
+        public void setUserPhotoUri(String userPhotoUri) {
             this.userPhotoUri = userPhotoUri;
         }
 
+        public void setUserID(String userID) {
+            this.userID = userID;
+        }
+
+        public void setSellItems(ArrayList<Sellingitem> sellItems) {
+            this.sellItems = sellItems;
+        }
+
+        public void addNewSellingItem(Sellingitem newSellingItem){
+            this.sellItems.add(newSellingItem);
+        }
     }
 
 

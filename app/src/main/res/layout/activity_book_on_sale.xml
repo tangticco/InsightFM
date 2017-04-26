@@ -30,7 +30,7 @@
             android:layout_centerHorizontal="true" />
 
         <ListView
-            android:id="@+id/booksearchsesultlistview"
+            android:id="@+id/bookListing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"

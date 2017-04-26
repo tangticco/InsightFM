@@ -105,16 +105,22 @@ public class FacebookLoginActivity extends BaseActivity implements
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    String userID = user.getUid();
+                    final String userID = user.getUid();
                     DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
 
+
+                    //check if the user is already in the firebase database
                     currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
                                 mdataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
                             }else{
-                                InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl(), user.getUid());
+                                InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
+
+                                DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
+                                FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
+                                mdataBase.setCurrentUser(newUser);
                             }
                         }
 

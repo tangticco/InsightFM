@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:openDrawer="start">
+
+<include
+    layout="@layout/app_bar_main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="edu.fandm.ztang.insightfm.SellBookActivity">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Sell A Book"
+            android:textSize="45sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="57dp"
+            />
+
+        <TextView
+            android:id="@+id/bookTitle_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="serif"
+            android:text="Book Title: "
+            android:textSize="18sp"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="57dp"
+            />
+
+        <TextView
+            android:id="@+id/course_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Course: "
+            android:textSize="18sp"
+            android:layout_marginLeft="57dp"
+            android:layout_below="@+id/bookTitle_title"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/sellPrice_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Selling Price: "
+            android:textSize="18sp"
+            android:layout_marginLeft="57dp"
+            android:layout_below="@+id/course_title"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/origPrice_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Original Price: "
+            android:textSize="18sp"
+            android:layout_marginLeft="57dp"
+            android:layout_below="@+id/sellPrice_title"
+            android:layout_marginTop="20dp"
+
+            />
+
+        <TextView
+            android:id="@+id/itemCondition_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Item Condition: "
+            android:textSize="18sp"
+            android:layout_marginLeft="57dp"
+            android:layout_below="@+id/origPrice_title"
+            android:layout_marginTop="20dp"
+             />
+
+        <TextView
+            android:id="@+id/itemDes_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Item Description: "
+            android:textSize="18sp"
+            android:layout_marginLeft="57dp"
+            android:layout_below="@+id/itemCondition_title"
+            android:layout_marginTop="20dp"
+            />
+
+        <Button
+            android:id="@+id/sumbitBook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List Item"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/itemDes_edittext"
+            android:layout_marginTop="30dp"
+            android:onClick="sumbit"
+            />
+
+        <EditText
+            android:id="@+id/bookTitle_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter Book Name"
+            android:textSize="12sp"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+
+            />
+
+        <EditText
+            android:id="@+id/course_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter Course"
+            android:textSize="12sp"
+            android:layout_below="@+id/bookTitle_edittext"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+             />
+
+        <EditText
+            android:id="@+id/sellPrice_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:textSize="12sp"
+            android:hint="Enter selling price"
+            android:layout_below="@+id/course_edittext"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            />
+
+        <EditText
+            android:id="@+id/origPrice_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:textSize="12sp"
+            android:hint="Enter original price"
+            android:layout_below="@+id/sellPrice_edittext"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+             />
+
+        <EditText
+            android:id="@+id/itemCondition_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="number"
+            android:textSize="12sp"
+            android:hint="New (1) to Old (5)"
+            android:layout_below="@+id/origPrice_edittext"
+            android:layout_marginTop="5dp"
+
+            android:layout_alignParentEnd="true"
+             />
+
+        <EditText
+            android:id="@+id/itemDes_edittext"
+            android:layout_width="377dp"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter Item description"
+            android:textSize="12sp"
+            android:layout_below="@+id/itemCondition_edittext"
+            android:layout_marginTop="40dp"
+            android:layout_alignParentEnd="true"
+            />
+
+        <ListView
+            android:id="@+id/course_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/sellPrice_edittext"
+            android:layout_toEndOf="@+id/itemDes_title"
+            android:layout_alignStart="@+id/sumbitBook"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+
+<android.support.design.widget.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:headerLayout="@layout/nav_header_main_content"
+    app:menu="@menu/activity_main_content_drawer" >
+
+</android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>
+

@@ -24,12 +24,20 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
+import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
+import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,6 +47,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     //test
     private String TAG = "Base: ";
+
+    //InsigtFM Database
+    InsightSingletonDatabase mDataBase;
 
 
     //Firebase Auth
@@ -50,6 +61,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        mDataBase = InsightSingletonDatabase.getInstance(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -118,6 +131,32 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         if (user != null) {
             // User is signed in
+
+            final String userID = user.getUid();
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
+
+
+            //check if the user is already in the firebase database
+            currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                 @Override
+                 public void onDataChange(DataSnapshot dataSnapshot) {
+                     if(dataSnapshot.exists()){
+                         mDataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
+                     }else{
+                         InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
+
+                         DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
+                         FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
+                         mDataBase.setCurrentUser(newUser);
+                     }
+                 }
+
+                 @Override
+                 public void onCancelled(DatabaseError databaseError) {
+
+                 }
+             });
 
 
             userName.setText(user.getDisplayName());
@@ -205,9 +244,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_book_onSale) {
 
-        } else if (id == R.id.nav_manage) {
+            Intent intent = new Intent(this, bookOnSaleActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_sell_book) {
+
+            Intent intent = new Intent(this, SellBookActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
