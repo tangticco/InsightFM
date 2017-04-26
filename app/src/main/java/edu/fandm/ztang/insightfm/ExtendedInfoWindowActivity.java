@@ -1,5 +1,6 @@
 package edu.fandm.ztang.insightfm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -37,6 +39,15 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
     private String classType;
     private TextView infoTitle;
 
+
+
+
+    //UI
+    Button button1;
+    Button button2;
+    Button button3;
+    Context mContext = this;
+
     //map movement related variables
 
 
@@ -57,6 +68,8 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
         position = b.getInt("Position");
         classType = b.getString("ClassType");
 
+        updateButtonUI();
+
         //set the info window's characteristic to the class type
         TextView classTypeTextView = (TextView)findViewById(R.id.classType);
         classTypeTextView.setText(classType);
@@ -66,6 +79,8 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
 
         //Fetch data from the website
         new InternetRequest().execute("https://www.fandm.edu");
+
+
 
 
 
@@ -358,6 +373,79 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
         }
     }
 
+    private void updateButtonUI(){
+
+        button1 = (Button)findViewById(R.id.button1);
+        button2 = (Button)findViewById(R.id.button2);
+        button3 = (Button)findViewById(R.id.button3);
+        if (classType.equals("Course")){
+
+            InsightDatabaseModel.Course currentCourse = mDatabase.getCourse(inforID);
+            //button 1
+            button1.setText("Building");
+            final InsightDatabaseModel.Building currentBuilding = currentCourse.getBelongedBuilding();
+
+            button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, SearchActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("SearchWord", currentBuilding.getResourceTitle());
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
+
+
+            //button 2
+            button2.setText("Instructor");
+
+            //button 3
+            button3.setText("Sessions");
+
+
+
+
+        }else if(classType.equals("Department")){
+
+            //button 1
+            button1.setText("Building");
+
+            //button 2
+            button2.setText("Courses");
+
+            //button 3
+            button3.setText("Instructors");
+
+        }else if(classType.equals("Building")){
+
+            //button 1
+            button1.setText("Floors");
+
+            //button 2
+            button2.setText("Departments");
+
+            //button 3
+            button3.setText("Courses");
+
+
+        }else if(classType.equals("Instructor")){
+
+            //button 1
+            button1.setText("Building");
+
+            //button 2
+            button2.setText("Courses");
+
+            //button 3
+            button3.setText("Contacts");
+
+        }else if(classType.equals("Session")){
+
+
+
+        }
+    }
 
     //test
     private String fetchDataTest(){

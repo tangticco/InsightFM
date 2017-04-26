@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -528,6 +529,7 @@ public class InsightDatabaseModel {
 
         //Course Reference
         private Department depart;
+        private Building belongedBuilding;
 
         //Course Attributes
         private String subj;
@@ -553,7 +555,7 @@ public class InsightDatabaseModel {
             setClassType("Course");
         }
 
-        public Course(String Subj, int courseNum, String Title, Department departName){
+        public Course(String Subj, int courseNum, String Title, Department departName, Building belongedBuilding){
             super();
 
             //set class attributes
@@ -561,6 +563,7 @@ public class InsightDatabaseModel {
             this.courseNum = courseNum;
             this.title = Title;
             this.depart = departName;
+            this.belongedBuilding = belongedBuilding;
 
             //Initialize course class values
             sessions = new ArrayList<>();
@@ -601,6 +604,10 @@ public class InsightDatabaseModel {
             return books;
         }
 
+        public Building getBelongedBuilding() {
+            return belongedBuilding;
+        }
+
         ////////////////////////////////////
         //Setter methods
         ////////////////////////////////////
@@ -639,6 +646,10 @@ public class InsightDatabaseModel {
 
         public void addBook(Book newBook){
             this.books.add(newBook);
+        }
+
+        public void setBelongedBuilding(Building belongedBuilding) {
+            this.belongedBuilding = belongedBuilding;
         }
     }
 
@@ -883,6 +894,7 @@ public class InsightDatabaseModel {
 
 
         //Book Reference
+        private int courseInfoID;
         private Course requiredCourse;
         private Instructor requiredInstructor;
 
@@ -890,9 +902,9 @@ public class InsightDatabaseModel {
 
         }
 
-        public Book(String bookTitle, Course belongCourse){
+        public Book(String bookTitle, int courseInfoID){
             this.bookTitle = bookTitle;
-            requiredCourse = belongCourse;
+            this.courseInfoID = courseInfoID;
             bookAuthor = "";
             ISBN = "";
 
@@ -917,8 +929,8 @@ public class InsightDatabaseModel {
             return ISBN;
         }
 
-        public Course getRequiredCourse() {
-            return requiredCourse;
+        public int getCourseInfoID() {
+            return courseInfoID;
         }
 
         public Instructor getRequiredInstructor() {
@@ -941,8 +953,8 @@ public class InsightDatabaseModel {
             this.onsaleItems = onsaleItems;
         }
 
-        public void setRequiredCourse(Course requiredCourse) {
-            this.requiredCourse = requiredCourse;
+        public void setCourseInfoID(int courseInfoID) {
+            this.courseInfoID = courseInfoID;
         }
 
         public void setRequiredInstructor(Instructor requiredInstructor) {

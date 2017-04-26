@@ -42,7 +42,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/scrollView2">
+            android:id="@+id/scrollView2"
+
+            >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -50,16 +52,18 @@
                 android:paddingRight="5dp"
                 android:paddingEnd="5dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <CheckBox
                     android:id="@+id/zoom_buttons_toggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
+                    android:checked="false"
                     android:onClick="setZoomButtonsEnabled"
-                    android:text="@string/zoom_buttons" />
+                    android:text="@string/zoom_buttons"
+                    android:visibility="gone"/>
 
                 <CheckBox
                     android:id="@+id/compass_toggle"
@@ -68,7 +72,8 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:onClick="setCompassEnabled"
-                    android:text="@string/compass" />
+                    android:text="@string/compass"
+                    android:visibility="gone"/>
 
                 <CheckBox
                     android:id="@+id/mylocationbutton_toggle"
@@ -95,7 +100,8 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:onClick="setScrollGesturesEnabled"
-                    android:text="@string/scroll" />
+                    android:text="@string/scroll"
+                    android:visibility="gone"/>
 
                 <CheckBox
                     android:id="@+id/zoom_gestures_toggle"
@@ -104,7 +110,8 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:onClick="setZoomGesturesEnabled"
-                    android:text="@string/zoom_gestures" />
+                    android:text="@string/zoom_gestures"
+                    android:visibility="gone"/>
 
                 <CheckBox
                     android:id="@+id/tilt_toggle"
@@ -113,7 +120,8 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:onClick="setTiltGesturesEnabled"
-                    android:text="@string/tilt" />
+                    android:text="@string/tilt"
+                    android:visibility="gone"/>
 
                 <CheckBox
                     android:id="@+id/rotate_toggle"
@@ -122,7 +130,8 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:onClick="setRotateGesturesEnabled"
-                    android:text="@string/rotate" />
+                    android:text="@string/rotate"
+                    android:visibility="gone"/>
             </LinearLayout>
         </ScrollView>
 
@@ -135,9 +144,8 @@
             android:padding="16dp"
             android:scaleType="fitCenter"
             android:src="@mipmap/ic_microphone_2"
-            android:layout_below="@+id/testTextview"
-            android:layout_alignStart="@+id/testTextview"
-            android:layout_marginTop="23dp" />
+            android:layout_alignTop="@+id/scrollView2"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

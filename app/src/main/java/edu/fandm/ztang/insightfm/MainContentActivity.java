@@ -160,9 +160,9 @@ public class MainContentActivity extends BaseActivity
         // Keep the UI Settings state in sync with the checkboxes.
         mUiSettings.setZoomControlsEnabled(isChecked(R.id.zoom_buttons_toggle));
         mUiSettings.setCompassEnabled(isChecked(R.id.compass_toggle));
-        mUiSettings.setMyLocationButtonEnabled(isChecked(R.id.mylocationbutton_toggle));
+        mUiSettings.setMyLocationButtonEnabled(true);
         try{
-            mMap.setMyLocationEnabled(isChecked(R.id.mylocationlayer_toggle));
+            mMap.setMyLocationEnabled(true);
         }catch (SecurityException e){
             e.printStackTrace();
         }

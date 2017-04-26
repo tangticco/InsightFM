@@ -190,7 +190,7 @@ public class SellBookActivity extends BaseActivity {
         if(infoComplete == true){
 
             //Create the new book and new selling item
-            InsightDatabaseModel.Book newBook = new InsightDatabaseModel.Book(bookTitle, selectedCourse);
+            InsightDatabaseModel.Book newBook = new InsightDatabaseModel.Book(bookTitle, selectedCourse.getInfoID());
             final InsightDatabaseModel.Sellingitem newItem  = new InsightDatabaseModel.Sellingitem(mDatabase.getCurrentUser(), sellPrice, origPrice, itemCondition, itemDescription, newBook);
 
             //Add this to the user's profile

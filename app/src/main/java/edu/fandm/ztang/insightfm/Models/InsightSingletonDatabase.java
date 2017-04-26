@@ -373,9 +373,6 @@ public class InsightSingletonDatabase {
     public ArrayList<InsightDatabaseModel.Sellingitem> getAllSellingItems() {
 
         Log.d("get method", String.valueOf(this.allSellingItems.size()));
-        for(int i = 0; i < this.allSellingItems.size(); i++){
-            Log.d("Progress: ", this.allSellingItems.get(i).itemDescription);
-        }
 
 
         return this.allSellingItems;
@@ -467,7 +464,7 @@ public class InsightSingletonDatabase {
                 InsightDatabaseModel.Course currentCourse;
                 tempNode = courseTitleTrie.searchNode(newCourseInfoList[3]);
                 if(tempNode == null){
-                    currentCourse = new InsightDatabaseModel.Course(newCourseInfoList[1], Integer.valueOf(newCourseInfoList[2]), newCourseInfoList[3], currentDepartment);
+                    currentCourse = new InsightDatabaseModel.Course(newCourseInfoList[1], Integer.valueOf(newCourseInfoList[2]), newCourseInfoList[3], currentDepartment, currentBuilding);
                     currentCourse.setInfoID(currentCourseIndex);
                     currentCourse.setRecourseLocation(currentLocation);
                     courseTitleTrie.insert(newCourseInfoList[3], currentCourseIndex);
