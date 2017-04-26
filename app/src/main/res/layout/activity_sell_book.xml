@@ -31,180 +31,257 @@ tools:openDrawer="start">
             android:layout_marginTop="57dp"
             />
 
-        <TextView
-            android:id="@+id/bookTitle_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            android:fontFamily="serif"
-            android:text="Book Title: "
-            android:textSize="18sp"
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/title"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="57dp"
-            />
+            android:layout_above="@+id/sumbitBook"
+            android:layout_marginTop="20dp">
 
-        <TextView
-            android:id="@+id/course_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="Course: "
-            android:textSize="18sp"
-            android:layout_marginLeft="57dp"
-            android:layout_below="@+id/bookTitle_title"
-            android:layout_marginTop="20dp"
-            />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/sellPrice_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="Selling Price: "
-            android:textSize="18sp"
-            android:layout_marginLeft="57dp"
-            android:layout_below="@+id/course_title"
-            android:layout_marginTop="20dp"
-            />
+                <TextView
+                    android:id="@+id/bookTitle_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <TextView
-            android:id="@+id/origPrice_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="Original Price: "
-            android:textSize="18sp"
-            android:layout_marginLeft="57dp"
-            android:layout_below="@+id/sellPrice_title"
-            android:layout_marginTop="20dp"
+                    android:fontFamily="serif"
+                    android:text="* Book Title: "
+                    android:textSize="18sp"
 
-            />
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="57dp"
+                    />
 
-        <TextView
-            android:id="@+id/itemCondition_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="Item Condition: "
-            android:textSize="18sp"
-            android:layout_marginLeft="57dp"
-            android:layout_below="@+id/origPrice_title"
-            android:layout_marginTop="20dp"
-             />
+                <TextView
+                    android:id="@+id/course_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="* Course: "
+                    android:textSize="18sp"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/bookTitle_title"
+                    android:layout_marginTop="25dp"
+                    />
 
-        <TextView
-            android:id="@+id/itemDes_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="Item Description: "
-            android:textSize="18sp"
-            android:layout_marginLeft="57dp"
-            android:layout_below="@+id/itemCondition_title"
-            android:layout_marginTop="20dp"
-            />
+                <TextView
+                    android:id="@+id/sellPrice_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="* Selling Price: "
+                    android:textSize="18sp"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/course_title"
+                    android:layout_marginTop="23dp"
+                    />
+
+                <TextView
+                    android:id="@+id/origPrice_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="* Original Price: "
+                    android:textSize="18sp"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/sellPrice_title"
+                    android:layout_marginTop="23dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/itemCondition_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="* Item Condition: "
+                    android:textSize="18sp"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/origPrice_title"
+                    android:layout_marginTop="23dp"
+                    />
+
+                <TextView
+                    android:id="@+id/itemDes_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="* Item Description: "
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/itemCondition_title"
+                    android:layout_marginTop="23dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Book Author"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/itemDes_edittext"
+                    android:layout_marginTop="23dp"
+                    android:id="@+id/itemAuthor_title"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ISBN"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:layout_marginLeft="57dp"
+                    android:layout_below="@+id/itemAuthor_title"
+                    android:layout_marginTop="23dp"
+
+                    android:id="@+id/itemISBN_title"
+                    />
+
+                <EditText
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:hint="Enter Book Author"
+                    android:textSize="12sp"
+                    android:layout_below="@+id/itemDes_edittext"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/itemAuthor_edittext"
+                    />
+
+                <EditText
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:hint="Enter Book ISBN"
+                    android:textSize="12sp"
+                    android:inputType="number"
+                    android:layout_below="@+id/itemAuthor_edittext"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/itemISBN_edittext"/>
+
+                <EditText
+                    android:id="@+id/bookTitle_edittext"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:hint="Enter Book Name"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@+id/bookTitle_title"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+
+                    />
+
+                <EditText
+                    android:id="@+id/course_edittext"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:hint="Enter Course"
+                    android:textSize="12sp"
+                    android:layout_below="@+id/bookTitle_edittext"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/sellPrice_edittext"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp"
+                    android:hint="Enter selling price"
+                    android:layout_below="@+id/course_edittext"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/origPrice_edittext"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp"
+                    android:hint="Enter original price"
+                    android:layout_below="@+id/sellPrice_edittext"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/itemCondition_edittext"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textSize="12sp"
+                    android:hint="New (1) to Old (5)"
+                    android:layout_below="@+id/origPrice_edittext"
+                    android:layout_marginTop="5dp"
+
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/itemDes_edittext"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:hint="Enter Item description"
+                    android:textSize="12sp"
+                    android:layout_below="@+id/itemDes_title"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentEnd="true"
+                    />
+
+                <ListView
+                    android:id="@+id/course_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@+id/sellPrice_edittext"
+                    android:layout_toEndOf="@+id/itemDes_title"
+                    android:visibility="gone"
+                    />
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
 
         <Button
             android:id="@+id/sumbitBook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="List Item"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/itemDes_edittext"
-            android:layout_marginTop="30dp"
             android:onClick="sumbit"
-            />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/bookTitle_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Enter Book Name"
-            android:textSize="12sp"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentEnd="true"
-
-            />
-
-        <EditText
-            android:id="@+id/course_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Enter Course"
-            android:textSize="12sp"
-            android:layout_below="@+id/bookTitle_edittext"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
-             />
-
-        <EditText
-            android:id="@+id/sellPrice_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:textSize="12sp"
-            android:hint="Enter selling price"
-            android:layout_below="@+id/course_edittext"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
-            />
-
-        <EditText
-            android:id="@+id/origPrice_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:textSize="12sp"
-            android:hint="Enter original price"
-            android:layout_below="@+id/sellPrice_edittext"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
-             />
-
-        <EditText
-            android:id="@+id/itemCondition_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="number"
-            android:textSize="12sp"
-            android:hint="New (1) to Old (5)"
-            android:layout_below="@+id/origPrice_edittext"
-            android:layout_marginTop="5dp"
-
-            android:layout_alignParentEnd="true"
-             />
-
-        <EditText
-            android:id="@+id/itemDes_edittext"
-            android:layout_width="377dp"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Enter Item description"
-            android:textSize="12sp"
-            android:layout_below="@+id/itemCondition_edittext"
-            android:layout_marginTop="40dp"
-            android:layout_alignParentEnd="true"
-            />
-
-        <ListView
-            android:id="@+id/course_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignTop="@+id/sellPrice_edittext"
-            android:layout_toEndOf="@+id/itemDes_title"
-            android:layout_alignStart="@+id/sumbitBook"
-            android:visibility="gone"
-            />
 
     </RelativeLayout>
 

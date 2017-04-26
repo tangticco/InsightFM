@@ -1069,14 +1069,14 @@ public class InsightDatabaseModel {
         String userID;
 
         //User Attributes
-        ArrayList<Sellingitem> sellItems;
+        ArrayList<String> sellItemsREFS;
 
 
         ////////////////////////////////////////////////////////////////////////
         ////Default Constructor
         ////////////////////////////////////////////////////////////////////////
         public User(){
-            sellItems = new ArrayList<>();
+            sellItemsREFS = new ArrayList<>();
         }
 
         public User(String userDisplayedName, String userEmail, String userPhotoUri, String userID){
@@ -1085,7 +1085,7 @@ public class InsightDatabaseModel {
             this.userPhotoUri = userPhotoUri;
             this.userID = userID;
 
-            sellItems = new ArrayList<>();
+            sellItemsREFS = new ArrayList<>();
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1109,8 +1109,8 @@ public class InsightDatabaseModel {
             return userID;
         }
 
-        public ArrayList<Sellingitem> getSellItems() {
-            return sellItems;
+        public ArrayList<String> getSellItemsREFS() {
+            return sellItemsREFS;
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1134,12 +1134,12 @@ public class InsightDatabaseModel {
             this.userID = userID;
         }
 
-        public void setSellItems(ArrayList<Sellingitem> sellItems) {
-            this.sellItems = sellItems;
+        public void setSellItemsREFS(ArrayList<String> sellItemsREFS) {
+            this.sellItemsREFS = sellItemsREFS;
         }
 
-        public void addNewSellingItem(Sellingitem newSellingItem){
-            this.sellItems.add(newSellingItem);
+        public void addNewSellingItemREF(String newSellingItemREF){
+            sellItemsREFS.add(newSellingItemREF);
         }
     }
 

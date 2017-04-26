@@ -34,6 +34,8 @@ public class SellBookActivity extends BaseActivity {
 
     //User entered value
     String bookTitle = "";
+    String bookAuthor = "";
+    String bookISBN = "";
     int bookCourseID = -1;
     double sellPrice = -1;
     double origPrice = -1;
@@ -187,33 +189,38 @@ public class SellBookActivity extends BaseActivity {
             infoComplete = false;
         }
 
+
+        //get other type-ins
+        EditText itemAuthor = (EditText)findViewById(R.id.itemAuthor_edittext);
+        bookAuthor = itemAuthor.getText().toString();
+        if(bookAuthor == null || bookAuthor.replaceAll("\\s", "").equals("")){
+            bookAuthor ="";
+        }
+
+        EditText itemISBN = (EditText)findViewById(R.id.itemISBN_edittext);
+        bookISBN = itemISBN.getText().toString();
+        if(bookISBN == null ||  bookISBN.replaceAll("\\s", "").equals("")){
+            bookISBN ="";
+        }
+
         if(infoComplete == true){
 
             //Create the new book and new selling item
             InsightDatabaseModel.Book newBook = new InsightDatabaseModel.Book(bookTitle, selectedCourse.getInfoID());
+            newBook.setBookAuthor(bookAuthor);
+            newBook.setISBN(bookISBN);
             final InsightDatabaseModel.Sellingitem newItem  = new InsightDatabaseModel.Sellingitem(mDatabase.getCurrentUser(), sellPrice, origPrice, itemCondition, itemDescription, newBook);
 
-            //Add this to the user's profile
-            final DatabaseReference allSellingItemRef = fireBase.getReference("allSellingItems");
-            allSellingItemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
-                        mDatabase.setAllSellingItems((ArrayList<InsightDatabaseModel.Sellingitem>) dataSnapshot.getValue());
-                        mDatabase.addNewSellingItem(newItem);
-                        allSellingItemRef.setValue(mDatabase.getAllSellingItems());
-                    }else{
-                        ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems = new ArrayList<InsightDatabaseModel.Sellingitem>();
-                        allSellingItems.add(newItem);
-                        allSellingItemRef.setValue(allSellingItems);
-                    }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            //Add this to the local database and update firebase
+            mDatabase.addNewSellingItem(newItem);
+            final DatabaseReference allSellingItemRef = fireBase.getReference("BookListing");
+            DatabaseReference newItemPost = allSellingItemRef.push();
+            newItemPost.setValue(newItem);
 
-                }
-            });
+            //added the listed item to the user profile
+            mDatabase.getCurrentUser().addNewSellingItemREF(newItemPost.getKey());
+            mDatabase.updateUserToFireBase();
 
             Toast.makeText(mContext, "Your Items Was Listed!", Toast.LENGTH_SHORT).show();
         }

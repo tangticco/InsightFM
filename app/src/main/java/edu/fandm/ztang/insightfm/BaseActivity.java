@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.hardware.camera2.params.Face;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
@@ -128,45 +129,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmailTitle);
         final ImageView userProfileImage = (ImageView)headerLayout.findViewById(R.id.userProfileImage);
 
-
-        if (user != null) {
-            // User is signed in
-
-            final String userID = user.getUid();
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
-
-
-            //check if the user is already in the firebase database
-            currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                 @Override
-                 public void onDataChange(DataSnapshot dataSnapshot) {
-                     if(dataSnapshot.exists()){
-                         mDataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
-                     }else{
-                         InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
-
-                         DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
-                         FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
-                         mDataBase.setCurrentUser(newUser);
-                     }
-                 }
-
-                 @Override
-                 public void onCancelled(DatabaseError databaseError) {
-
-                 }
-             });
-
-
-            userName.setText(user.getDisplayName());
-            userEmail.setText(user.getEmail());
+        if(mDataBase.isUserSignIn){
+            userName.setText(mDataBase.getCurrentUser().getUserDisplayedName());
+            userEmail.setText(mDataBase.getCurrentUser().getUserEmail());
 
             Thread downloadThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        URL aURL = new URL(user.getPhotoUrl().toString());
+                        URL aURL = new URL(mDataBase.getCurrentUser().getUserPhotoUri());
                         URLConnection conn = aURL.openConnection();
                         conn.connect();
                         InputStream is = conn.getInputStream();
@@ -189,8 +160,68 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             });
             downloadThread.start();
         }else{
+            if (user != null) {
+                // User is signed in
 
+                //update local database indicator
+                mDataBase.isUserSignIn = true;
+
+                final String userID = user.getUid();
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
+                //check if the user is already in the firebase database
+                currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            mDataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
+                        }else{
+                            InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
+                            DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
+                            FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
+                            mDataBase.setCurrentUser(newUser);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                userName.setText(user.getDisplayName());
+                userEmail.setText(user.getEmail());
+
+                Thread downloadThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            URL aURL = new URL(user.getPhotoUrl().toString());
+                            URLConnection conn = aURL.openConnection();
+                            conn.connect();
+                            InputStream is = conn.getInputStream();
+                            BufferedInputStream bis = new BufferedInputStream(is);
+                            final Bitmap bm = BitmapFactory.decodeStream(bis);
+                            bis.close();
+                            is.close();
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    userProfileImage.setImageBitmap(bm);
+                                }
+                            });
+
+                        } catch (IOException e) {
+                            Log.e(TAG, "Error getting bitmap", e);
+                        }
+                    }
+                });
+                downloadThread.start();
+            }
         }
+
     }
 
 
@@ -251,8 +282,17 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_sell_book) {
 
-            Intent intent = new Intent(this, SellBookActivity.class);
-            startActivity(intent);
+            if(mDataBase.isUserSignIn){
+                Intent intent = new Intent(this, SellBookActivity.class);
+                startActivity(intent);
+            }else{
+                //if the user is not sign in, redirect him to login in page
+
+                mDataBase.isReuqiredLogin = true;
+                Intent intent = new Intent(this, FacebookLoginActivity.class);
+                startActivity(intent);
+            }
+
 
         } else if (id == R.id.nav_share) {
 

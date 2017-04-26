@@ -345,7 +345,6 @@ public class MainContentActivity extends BaseActivity
         if(searchWord.contains("search") || searchWord.contains("find")){
             Intent intent = new Intent(this, SearchActivity.class);
             Bundle b = new Bundle();
-
             b.putString("SearchWord", splited[splited.length-1]);
             intent.putExtras(b);
             startActivity(intent);

@@ -5,6 +5,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jsoup.helper.StringUtil;
 
@@ -74,13 +79,18 @@ public class InsightSingletonDatabase {
 
     //user-related variable
     private InsightDatabaseModel.User currentUser;
+    public boolean isUserSignIn = false;
 
 
     //Book Selling related variables
     private ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems;
+    public boolean isReuqiredLogin = false; //used when redirecting users to login first
 
 
     public boolean getSpeechCommand = false;
+
+    //firebase
+    FirebaseDatabase mFirebase;
 
 
     /**
@@ -90,6 +100,8 @@ public class InsightSingletonDatabase {
     private InsightSingletonDatabase(Context pContext){
 
         mContext = pContext;
+
+        mFirebase = FirebaseDatabase.getInstance();
 
         //initialize instances for data-storing
         courses = new ArrayList<>();
@@ -127,6 +139,7 @@ public class InsightSingletonDatabase {
 
         //Initialize Selling related variables
         allSellingItems = new ArrayList<>();
+        initialzieAllSellingItems();    //initialize the all selling items
 
         Toast.makeText(mContext, "Database Complete", Toast.LENGTH_SHORT).show();
     }
@@ -698,5 +711,33 @@ public class InsightSingletonDatabase {
     public void addNewSellingItem(InsightDatabaseModel.Sellingitem newItem){
         this.allSellingItems.add(newItem);
         Log.d("Set method", String.valueOf(this.allSellingItems.size()));
+    }
+
+    private void initialzieAllSellingItems(){
+        DatabaseReference bookListingRef = mFirebase.getReference("BookListing");
+        bookListingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount() == 0){
+                    allSellingItems = new ArrayList<InsightDatabaseModel.Sellingitem>();
+                }else{
+                    for(DataSnapshot sellingItemSnapShot : dataSnapshot.getChildren()){
+                        InsightDatabaseModel.Sellingitem newItem = sellingItemSnapShot.getValue(InsightDatabaseModel.Sellingitem.class);
+                        allSellingItems.add(newItem);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void updateUserToFireBase(){
+        DatabaseReference currentDatabaseREF = mFirebase.getReference();
+        currentDatabaseREF.child("Users").child(currentUser.getUserID()).setValue(currentUser);
     }
 }

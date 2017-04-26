@@ -86,6 +86,12 @@ public class FacebookLoginActivity extends BaseActivity implements
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_facebook);
 
+
+        if(mdataBase.isReuqiredLogin){
+            Toast.makeText(mContext, "You should login in first!", Toast.LENGTH_SHORT).show();
+            mdataBase.isReuqiredLogin = false;
+        }
+
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
@@ -105,19 +111,21 @@ public class FacebookLoginActivity extends BaseActivity implements
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
+                    //update the local database sign in indicator
+                    mdataBase.isUserSignIn = true;
+
+
+                    //retrive the user reference in firebase or create a new one
                     final String userID = user.getUid();
                     DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
-
-
-                    //check if the user is already in the firebase database
                     currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
-                                mdataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
+                                InsightDatabaseModel.User currentUser = dataSnapshot.getValue(InsightDatabaseModel.User.class);
+                                mdataBase.setCurrentUser(currentUser);
                             }else{
                                 InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
-
                                 DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
                                 FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
                                 mdataBase.setCurrentUser(newUser);
@@ -246,6 +254,8 @@ public class FacebookLoginActivity extends BaseActivity implements
     // [END auth_with_facebook]
 
     public void signOut() {
+
+        mdataBase.isUserSignIn = false;
         mAuth.signOut();
         LoginManager.getInstance().logOut();
 
