@@ -80,6 +80,9 @@ public class InsightSingletonDatabase {
     private ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems;
 
 
+    public boolean getSpeechCommand = false;
+
+
     /**
      * A private default constructor
      * @param pContext

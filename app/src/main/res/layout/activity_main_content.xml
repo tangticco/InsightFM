@@ -126,15 +126,18 @@
             </LinearLayout>
         </ScrollView>
 
-        <TextView
-            android:id="@+id/testTextview"
+
+        <ImageButton
+            android:id="@+id/speechButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/scrollView2"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="212dp"
-            android:text="TextView" />
+            android:background="@null"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_microphone_2"
+            android:layout_below="@+id/testTextview"
+            android:layout_alignStart="@+id/testTextview"
+            android:layout_marginTop="23dp" />
 
     </RelativeLayout>
 

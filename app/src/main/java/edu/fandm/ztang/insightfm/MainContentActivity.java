@@ -1,12 +1,14 @@
 package edu.fandm.ztang.insightfm;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,6 +59,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
@@ -88,6 +92,11 @@ public class MainContentActivity extends BaseActivity
     private Context mContext = this;
 
 
+    //Voice recognition variables
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
+    private ImageButton mSpeakBtn;
+
+
 
 
 
@@ -114,6 +123,16 @@ public class MainContentActivity extends BaseActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        //initialize voice input recognition
+        mSpeakBtn = (ImageButton) findViewById(R.id.speechButton);
+        mSpeakBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startVoiceInput();
+            }
+        });
 
     }
 
@@ -279,7 +298,78 @@ public class MainContentActivity extends BaseActivity
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////Voice Recognition Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void startVoiceInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+
+
+                    processSpeechWordResult(result.get(0));
+
+                }
+                break;
+            }
+
+        }
+    }
+
+
+    public void processSpeechWordResult(String searchWord){
+
+        mDatabase.getSpeechCommand = true;
+        String[] splited = searchWord.split("\\s+");
+
+        String commandCategory = splited[0];
+
+        Log.d("Progess: ", "here");
+        if(searchWord.contains("search") || searchWord.contains("find")){
+            Intent intent = new Intent(this, SearchActivity.class);
+            Bundle b = new Bundle();
+
+            b.putString("SearchWord", splited[splited.length-1]);
+            intent.putExtras(b);
+            startActivity(intent);
+            Log.d("Progess: ", "here");
+        }else if(searchWord.contains("sell") || searchWord.contains("list")){
+            Intent intent = new Intent(this, SellBookActivity.class);
+            startActivity(intent);
+        }else if(searchWord.contains("open")){
+            if(searchWord.contains("sell")){
+                Intent intent = new Intent(this, SellBookActivity.class);
+                startActivity(intent);
+            }else if(searchWord.contains("account")){
+                Intent intent = new Intent(this, AccountProfileActivity.class);
+                startActivity(intent);
+            }else if(searchWord.contains("search")) {
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+            }else if(searchWord.contains("list")){
+                Intent intent = new Intent(this, bookOnSaleActivity.class);
+                startActivity(intent);
+            }
+        }
+
+    }
 
 
 

@@ -119,6 +119,8 @@ public class SearchActivity extends BaseActivity {
         navigationView.setNavigationItemSelectedListener(this);
         updateProfile();
 
+
+
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////Voice Recognition Functions
@@ -217,6 +219,13 @@ public class SearchActivity extends BaseActivity {
             if(hasFocus){
                 searchBar.addTextChangedListener(new SearchBarTextChangedListener());
                 searchResultListView.setVisibility(View.VISIBLE);
+
+                if(mDatabase.getSpeechCommand){
+                    Bundle b = getIntent().getExtras();
+                    searchBar.setText(b.getString("SearchWord"));
+                    mDatabase.getSpeechCommand = false;
+                }
+
             }else {
                 Toast.makeText(getApplicationContext(), "lost the focus", Toast.LENGTH_LONG).show();
                 searchResultListView.setVisibility(View.GONE);
