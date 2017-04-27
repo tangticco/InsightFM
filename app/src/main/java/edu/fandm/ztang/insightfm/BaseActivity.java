@@ -160,6 +160,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             });
             downloadThread.start();
         }else{
+
+            //check if the current user is not write into the local database
             if (user != null) {
                 // User is signed in
 
@@ -176,7 +178,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                         if(dataSnapshot.exists()){
                             mDataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
                         }else{
-                            InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
+                            String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
+                            if(user.getPhotoUrl() != null){
+                                photoURI = user.getPhotoUrl().toString();
+                            }
+
+                            InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), photoURI, user.getUid());
                             DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
                             FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
                             mDataBase.setCurrentUser(newUser);
@@ -193,11 +200,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 userName.setText(user.getDisplayName());
                 userEmail.setText(user.getEmail());
 
+
+
+
                 Thread downloadThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            URL aURL = new URL(user.getPhotoUrl().toString());
+
+                            String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
+                            if(user.getPhotoUrl() != null){
+                                photoURI = user.getPhotoUrl().toString();
+                            }
+                            URL aURL = new URL(photoURI);
                             URLConnection conn = aURL.openConnection();
                             conn.connect();
                             InputStream is = conn.getInputStream();
@@ -219,6 +234,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 downloadThread.start();
+
+            }else{
+
+                //User is not login
+
             }
         }
 
@@ -296,6 +316,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_share) {
 
+            Intent intent = new Intent(this, EmailPasswordActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_send) {
 
         }
@@ -305,21 +328,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
     public void newUserSignIn(View v){
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
-        final FirebaseUser user = mAuth.getCurrentUser();
-
-        if(user != null){
-            Intent intent = new Intent(this, AccountProfileActivity.class);
-            startActivity(intent);
-        }else{
-            Intent intent = new Intent(this, FacebookLoginActivity.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, EmailPasswordActivity.class);
+        startActivity(intent);
     }
 
 }

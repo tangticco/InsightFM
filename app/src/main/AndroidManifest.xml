@@ -57,7 +57,8 @@
         <activity android:name=".bookOnSaleActivity" />
         <activity android:name=".AccountProfileActivity" />
         <activity android:name=".SellBookActivity" />
-        <activity android:name=".BookDetailActivity"></activity>
+        <activity android:name=".BookDetailActivity" />
+        <activity android:name=".EmailPasswordActivity"></activity>
     </application>
 
 </manifest>

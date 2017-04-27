@@ -162,7 +162,7 @@ public class MainContentActivity extends BaseActivity
         mUiSettings.setCompassEnabled(isChecked(R.id.compass_toggle));
         mUiSettings.setMyLocationButtonEnabled(true);
         try{
-            mMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(isChecked(R.id.mylocationbutton_toggle));
         }catch (SecurityException e){
             e.printStackTrace();
         }
