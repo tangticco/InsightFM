@@ -2,24 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.4"
+        android:layout_weight="0.15"
         android:textAlignment="center"
-        android:id="@+id/booktitle_row"
-        android:textSize="15sp"
-        android:padding="5dp"/>
+        android:id="@+id/session_crn"
+        android:textSize="14sp"
+        android:padding="5dp"
+        />
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.3"
+        android:layout_weight="0.1"
         android:textAlignment="center"
-        android:id="@+id/bookSeller_row"
-        android:textSize="15sp"
+        android:id="@+id/session_days"
+        android:textSize="14sp"
+        android:padding="5dp"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35"
+        android:textAlignment="center"
+        android:id="@+id/session_time"
+        android:textSize="14sp"
         android:padding="5dp"
         />
     <TextView
@@ -27,20 +38,20 @@
         android:layout_height="match_parent"
         android:layout_weight="0.15"
         android:textAlignment="center"
-        android:id="@+id/sellingPrice_row"
-        android:textColor="#ff0000"
-        android:textSize="15sp"
+        android:id="@+id/session_room"
+        android:textSize="14sp"
         android:padding="5dp"
         />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.15"
+        android:layout_weight="0.25"
         android:textAlignment="center"
-        android:id="@+id/origPrice_row"
-        android:textSize="15sp"
-        android:padding="5dp"/>
+        android:id="@+id/session_instructor"
+        android:textSize="14sp"
+        android:padding="5dp"
+        />
 
 
 

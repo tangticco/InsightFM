@@ -13,188 +13,218 @@ tools:openDrawer="start">
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="edu.fandm.ztang.insightfm.AccountProfileActivity">
+        tools:context="edu.fandm.ztang.insightfm.AccountProfileActivity"
+        android:weightSum="12"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/accountProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:fontFamily="serif"
-            android:text="Account Profile"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="175dp"
-            tools:layout_editor_absoluteY="39dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:id="@+id/usernameTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/imageView"
-            android:layout_marginLeft="70dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="38dp"
-            android:fontFamily="serif"
-            android:text="Username: "
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="31dp"
-            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            android:layout_below="@+id/accountProfile"
-            android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Account Profile"
+                android:textSize="30sp"
+                android:fontFamily="serif"
+                />
 
-        <TextView
-            android:id="@+id/fullNameTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/usernameTitle"
-            android:layout_alignRight="@+id/usernameTitle"
-            android:layout_below="@+id/usernameTitle"
-            android:layout_marginTop="14dp"
-            android:fontFamily="serif"
-            android:text="Full Name: "
-            android:textSize="18sp" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/userEmailTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/fullNameTitle"
-            android:layout_alignStart="@+id/fullNameTitle"
-            android:layout_below="@+id/fullNameTitle"
-            android:layout_marginTop="17dp"
-            android:fontFamily="serif"
-            android:text="Email: "
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2">
 
-        <TextView
-            android:id="@+id/userPhoneTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/userEmailTitle"
-            android:layout_alignStart="@+id/userEmailTitle"
-            android:layout_below="@+id/userEmailTitle"
-            android:layout_marginTop="17dp"
-            android:fontFamily="serif"
-            android:text="Phone: "
-            android:textSize="18sp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/userProfileImage_imageV"
+                />
 
-        <TextView
-            android:id="@+id/userClassTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/userPhoneTitle"
-            android:layout_alignStart="@+id/userPhoneTitle"
-            android:layout_below="@+id/userPhoneTitle"
-            android:layout_marginTop="14dp"
-            android:fontFamily="serif"
-            android:text="Class"
-            android:textSize="18sp" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/userMajorTitle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/userClassTitle"
-            android:layout_alignStart="@+id/userClassTitle"
-            android:layout_below="@+id/userClassTitle"
-            android:layout_marginTop="14dp"
-            android:fontFamily="serif"
-            android:text="Major: "
-            android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:weightSum="5"
+            android:orientation="horizontal"
+            >
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userMajorTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="Save Changes" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:weightSum="6">
 
-        <EditText
-            android:id="@+id/userNamePlace"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/usernameTitle"
-            android:layout_alignBottom="@+id/usernameTitle"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="17dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter username"
-            android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/userFullNamePlace"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/userEmailPlace"
-            android:layout_alignStart="@+id/userNamePlace"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter full name"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/userName_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Username :  "
+                    android:textAlignment="viewEnd"
+                    android:textSize="18sp"
+                    android:paddingTop="20dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Full Name :  "
+                    android:id="@+id/userFullName_title"
+                    android:textSize="18sp"
+                    android:textAlignment="viewEnd"
+                    android:paddingTop="20dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Email :  "
+                    android:textAlignment="viewEnd"
+                    android:paddingTop="20dp"
+                    android:textSize="18sp"
+                    android:id="@+id/userEmail_title"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Phone :  "
+                    android:textAlignment="viewEnd"
+                    android:paddingTop="20dp"
+                    android:textSize="18sp"
+                    android:id="@+id/userPhone_title"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Class :  "
+                    android:textAlignment="viewEnd"
+                    android:paddingTop="20dp"
+                    android:textSize="18sp"
+                    android:id="@+id/userClass_title"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Major :  "
+                    android:textSize="18sp"
+                    android:textAlignment="viewEnd"
+                    android:paddingTop="20dp"
+                    android:id="@+id/userMajor_title"
+                    />
 
-        <EditText
-            android:id="@+id/userEmailPlace"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/userPhonePlace"
-            android:layout_alignStart="@+id/userFullNamePlace"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:text="Enter Email"
-            android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/userPhonePlace"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/userClassPlace"
-            android:layout_alignStart="@+id/userEmailPlace"
-            android:ems="10"
-            android:inputType="phone"
-            android:text="Enter Phone Number"
-            android:textSize="16sp" />
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/userClassPlace"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/userMajor"
-            android:layout_alignStart="@+id/userPhonePlace"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter class"
-            android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:weightSum="6"
+                android:orientation="vertical"
+                >
 
-        <EditText
-            android:id="@+id/userMajor"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/userClassPlace"
-            android:layout_below="@+id/userClassTitle"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter Major"
-            android:textSize="16sp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userName_edit"
+                    android:hint="Enter userName"
+                    />
 
-    </RelativeLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userFullName_edit"
+                    android:hint="Enter Full Name"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userEmail_edit"
+                    android:inputType="textEmailAddress"
+                    android:hint="Enter Email"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userPhone_edit"
+                    android:hint="Enter Phone"
+                    android:inputType="number"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userClass_edit"
+                    android:hint="Enter Class"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/userMajor_edit"
+                    android:hint="Enter Major"
+                    />
+
+
+
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.8">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AlertDialog.AppCompat.Light"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:onClick="submitChange"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
 <android.support.design.widget.NavigationView

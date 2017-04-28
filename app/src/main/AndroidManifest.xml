@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +31,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD3oHlBZpwK7ZLNx6xFwS_OgJBTjXPWTD4" />
+            android:value="AIzaSyBgtj4jbVymQ3nI8MjQpjlqsKM6n1l8gkA" />
 
         <!-- facebook App ID -->
         <meta-data
@@ -41,7 +42,8 @@
         <activity
             android:name=".MainContentActivity"
             android:label="@string/title_activity_main_content"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,13 +54,54 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BaseActivity" />
-        <activity android:name=".FacebookLoginActivity" />
-        <activity android:name=".bookOnSaleActivity" />
+        <activity
+            android:name=".BaseActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".FacebookLoginActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".bookOnSaleActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".AccountProfileActivity" />
-        <activity android:name=".SellBookActivity" />
-        <activity android:name=".BookDetailActivity" />
-        <activity android:name=".EmailPasswordActivity"></activity>
+        <activity
+            android:name=".SellBookActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".BookDetailActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND" />-->
+                <!--<data android:type="*/*" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <data android:scheme="mailto" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name=".EmailPasswordActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity android:name=".ContactsActivity"
+            >
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND" />-->
+                <!--<data android:type="*/*" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SENDTO" />-->
+                <!--<data android:scheme="mailto" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

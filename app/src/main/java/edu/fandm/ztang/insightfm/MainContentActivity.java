@@ -105,6 +105,8 @@ public class MainContentActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
 
+        getPermissions();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -383,7 +385,7 @@ public class MainContentActivity extends BaseActivity
      */
     public void getPermissions(){
 
-        String[] perms = new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] perms = new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE};
         ActivityCompat.requestPermissions(this, perms, 1);
 
     }

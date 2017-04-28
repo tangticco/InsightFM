@@ -539,7 +539,7 @@ public class InsightDatabaseModel {
 
         //Course values
         private ArrayList<Session> sessions;
-        private ArrayList<Book> books;
+        private ArrayList<Sellingitem> sellingitems;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////Default Constructors
@@ -567,6 +567,7 @@ public class InsightDatabaseModel {
 
             //Initialize course class values
             sessions = new ArrayList<>();
+            sellingitems = new ArrayList<>();
 
             //set super class attributes
             setClassType("Course");
@@ -600,8 +601,8 @@ public class InsightDatabaseModel {
             return sessions;
         }
 
-        public ArrayList<Book> getBooks() {
-            return books;
+        public ArrayList<Sellingitem> getSellingitems() {
+            return sellingitems;
         }
 
         public Building getBelongedBuilding() {
@@ -640,12 +641,12 @@ public class InsightDatabaseModel {
             sessions.add(newSession);
         }
 
-        public void setBooks(ArrayList<Book> books) {
-            this.books = books;
+        public void setSellingitems(ArrayList<Sellingitem> sellingitems) {
+            this.sellingitems = sellingitems;
         }
 
-        public void addBook(Book newBook){
-            this.books.add(newBook);
+        public void addSellingitem(Sellingitem newItem){
+            sellingitems.add(newItem);
         }
 
         public void setBelongedBuilding(Building belongedBuilding) {
@@ -965,7 +966,7 @@ public class InsightDatabaseModel {
     public static class Sellingitem{
 
         //Item Attributes
-        User itemSeller;
+        String userKey;
         Double sellingPrice;
         Double originalPrice;
         Integer itemCondition; // 1-5, new to very used
@@ -983,8 +984,8 @@ public class InsightDatabaseModel {
 
         }
 
-        public Sellingitem(User seller, Double sellingPrice, Double originalPrice, Integer itemCondition, String itemDescription, Book belongedBook){
-            this.itemSeller = seller;
+        public Sellingitem(String userKey, Double sellingPrice, Double originalPrice, Integer itemCondition, String itemDescription, Book belongedBook){
+            this.userKey = userKey;
             this.sellingPrice = sellingPrice;
             this.originalPrice = originalPrice;
             this.itemCondition = itemCondition;
@@ -997,8 +998,9 @@ public class InsightDatabaseModel {
         /////Getter Methods
         ////////////////////////////////////////////////////////////////////////
 
-        public User getItemSeller() {
-            return itemSeller;
+
+        public String getUserKey() {
+            return userKey;
         }
 
         public Double getSellingPrice() {
@@ -1021,13 +1023,14 @@ public class InsightDatabaseModel {
             return belongedBook;
         }
 
+
         ////////////////////////////////////////////////////////////////////////
         ////Setter Methods
         ////////////////////////////////////////////////////////////////////////
 
 
-        public void setItemSeller(User itemSeller) {
-            this.itemSeller = itemSeller;
+        public void setUserKey(String userKey) {
+            this.userKey = userKey;
         }
 
         public void setSellingPrice(Double sellingPrice) {
@@ -1046,6 +1049,7 @@ public class InsightDatabaseModel {
             this.itemDescription = itemDescription;
         }
 
+
         public void setBelongedBook(Book belongedBook) {
             this.belongedBook = belongedBook;
         }
@@ -1061,11 +1065,11 @@ public class InsightDatabaseModel {
         String userDisplayedName;
         String userEmail;
         String userPhotoUri;
-//        String userPhoneNumber;
-//        String userClass;
-//        String userMajor;
-//        String firstname;
-//        String lastName;
+
+        String userPhoneNumber;
+        String userClass;
+        String userMajor;
+        String userFullName;
         String userID;
 
         //User Attributes
@@ -1084,6 +1088,11 @@ public class InsightDatabaseModel {
             this.userEmail = userEmail;
             this.userPhotoUri = userPhotoUri;
             this.userID = userID;
+
+            userPhoneNumber = "";
+            userClass = "";
+            userMajor = "";
+            userFullName = "";
 
             sellItemsREFS = new ArrayList<>();
         }
@@ -1113,6 +1122,22 @@ public class InsightDatabaseModel {
             return sellItemsREFS;
         }
 
+        public String getUserPhoneNumber() {
+            return userPhoneNumber;
+        }
+
+        public String getUserClass() {
+            return userClass;
+        }
+
+        public String getUserMajor() {
+            return userMajor;
+        }
+
+        public String getUserFullName() {
+            return userFullName;
+        }
+
         ////////////////////////////////////////////////////////////////////////
         /////Setter methods
         ////////////////////////////////////////////////////////////////////////
@@ -1140,6 +1165,22 @@ public class InsightDatabaseModel {
 
         public void addNewSellingItemREF(String newSellingItemREF){
             sellItemsREFS.add(newSellingItemREF);
+        }
+
+        public void setUserPhoneNumber(String userPhoneNumber) {
+            this.userPhoneNumber = userPhoneNumber;
+        }
+
+        public void setUserClass(String userClass) {
+            this.userClass = userClass;
+        }
+
+        public void setUserMajor(String userMajor) {
+            this.userMajor = userMajor;
+        }
+
+        public void setUserFullName(String userFullName) {
+            this.userFullName = userFullName;
         }
     }
 

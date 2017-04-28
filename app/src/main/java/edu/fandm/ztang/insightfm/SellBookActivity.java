@@ -209,8 +209,7 @@ public class SellBookActivity extends BaseActivity {
             InsightDatabaseModel.Book newBook = new InsightDatabaseModel.Book(bookTitle, selectedCourse.getInfoID());
             newBook.setBookAuthor(bookAuthor);
             newBook.setISBN(bookISBN);
-            final InsightDatabaseModel.Sellingitem newItem  = new InsightDatabaseModel.Sellingitem(mDatabase.getCurrentUser(), sellPrice, origPrice, itemCondition, itemDescription, newBook);
-
+            final InsightDatabaseModel.Sellingitem newItem  = new InsightDatabaseModel.Sellingitem(mDatabase.getCurrentUser().getUserID(), sellPrice, origPrice, itemCondition, itemDescription, newBook);
 
             //Add this to the local database and update firebase
             mDatabase.addNewSellingItem(newItem);
@@ -221,6 +220,7 @@ public class SellBookActivity extends BaseActivity {
             //added the listed item to the user profile
             mDatabase.getCurrentUser().addNewSellingItemREF(newItemPost.getKey());
             mDatabase.updateUserToFireBase();
+
 
             Toast.makeText(mContext, "Your Items Was Listed!", Toast.LENGTH_SHORT).show();
         }

@@ -18,6 +18,8 @@ package edu.fandm.ztang.insightfm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -25,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 
@@ -233,7 +242,9 @@ public class EmailPasswordActivity extends BaseActivity implements
                                         InsightDatabaseModel.User currentUser = dataSnapshot.getValue(InsightDatabaseModel.User.class);
                                         mDataBase.setCurrentUser(currentUser);
                                     }else{
-                                        InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(user.getDisplayName(), user.getEmail(), "http://i2.muimg.com/567571/1c07fb459f845b8c.png", user.getUid());
+                                        EditText nameEdittext = (EditText)findViewById(R.id.field_name);
+                                        String displayName = nameEdittext.getText().toString();
+                                        InsightDatabaseModel.User newUser = new InsightDatabaseModel.User(displayName, user.getEmail(), "http://i2.muimg.com/567571/1c07fb459f845b8c.png", user.getUid());
                                         DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
                                         FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
                                         mDataBase.setCurrentUser(newUser);
@@ -377,6 +388,39 @@ public class EmailPasswordActivity extends BaseActivity implements
             TextView signedInName = (TextView)findViewById(R.id.signed_in_profileName);
             signedInName.setText(mDataBase.getCurrentUser().getUserDisplayedName());
             signedInEmail.setText(mDataBase.getCurrentUser().getUserEmail());
+            //update profile image
+            final ImageView userProfileImage = (ImageView)findViewById(R.id.signed_in_profileImage);
+            Thread downloadThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
+                        if(mDataBase.getCurrentUser().getUserPhotoUri() != null){
+                            photoURI = mDataBase.getCurrentUser().getUserPhotoUri().toString();
+                        }
+                        URL aURL = new URL(photoURI);
+                        URLConnection conn = aURL.openConnection();
+                        conn.connect();
+                        InputStream is = conn.getInputStream();
+                        BufferedInputStream bis = new BufferedInputStream(is);
+                        final Bitmap bm = BitmapFactory.decodeStream(bis);
+                        bis.close();
+                        is.close();
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userProfileImage.setImageBitmap(bm);
+                            }
+                        });
+
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error getting bitmap", e);
+                    }
+                }
+            });
+            downloadThread.start();
 
             findViewById(R.id.facebook_login_panel).setVisibility(View.GONE);
             findViewById(R.id.sign_out_panel).setVisibility(View.VISIBLE);
@@ -412,6 +456,13 @@ public class EmailPasswordActivity extends BaseActivity implements
             sendEmailVerification();
         }else if (i == R.id.button_facebook_signout) {
             signOut();
+        }else if (i == R.id.profile_button){
+            Intent intent = new Intent(this, AccountProfileActivity.class);
+            startActivity(intent);
+        }else if(i == R.id.bookList_button){
+            mDataBase.isMyBookListing = true;
+            Intent intent = new Intent(this, bookOnSaleActivity.class);
+            startActivity(intent);
         }
     }
 

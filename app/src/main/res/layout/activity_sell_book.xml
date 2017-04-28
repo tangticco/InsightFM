@@ -48,11 +48,12 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/bookTitle_title"
+                    android:text="* Book Title: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
                     android:fontFamily="serif"
-                    android:text="* Book Title: "
+
                     android:textSize="18sp"
 
                     android:layout_marginTop="20dp"
@@ -61,10 +62,11 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/course_title"
+                    android:text="* Course: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
-                    android:text="* Course: "
+
                     android:textSize="18sp"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/bookTitle_title"
@@ -73,10 +75,11 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/sellPrice_title"
+                    android:text="* Selling Price: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
-                    android:text="* Selling Price: "
+
                     android:textSize="18sp"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/course_title"
@@ -85,10 +88,11 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/origPrice_title"
+                    android:text="* Original Price: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
-                    android:text="* Original Price: "
+
                     android:textSize="18sp"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/sellPrice_title"
@@ -98,10 +102,11 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/itemCondition_title"
+                    android:text="* Item Condition: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
-                    android:text="* Item Condition: "
+
                     android:textSize="18sp"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/origPrice_title"
@@ -110,9 +115,10 @@ tools:openDrawer="start">
 
                 <TextView
                     android:id="@+id/itemDes_title"
+                    android:text="* Item Description: "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="* Item Description: "
+
                     android:textSize="18sp"
                     android:fontFamily="serif"
                     android:layout_marginLeft="57dp"
@@ -123,25 +129,26 @@ tools:openDrawer="start">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Book Author"
+
                     android:textSize="18sp"
                     android:fontFamily="serif"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/itemDes_edittext"
                     android:layout_marginTop="23dp"
                     android:id="@+id/itemAuthor_title"
+                    android:text="Book Author"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ISBN"
+
                     android:textSize="18sp"
                     android:fontFamily="serif"
                     android:layout_marginLeft="57dp"
                     android:layout_below="@+id/itemAuthor_title"
                     android:layout_marginTop="23dp"
-
+                    android:text="ISBN"
                     android:id="@+id/itemISBN_title"
                     />
 

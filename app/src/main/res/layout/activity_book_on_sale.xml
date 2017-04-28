@@ -11,33 +11,94 @@
     <include
         layout="@layout/app_bar_main_content_withoutfab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="6"
+        android:orientation="vertical">
 
-
-        <EditText
-            android:id="@+id/booksearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter the book info"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <ListView
-            android:id="@+id/bookListing"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/booksearch"
-            android:layout_marginTop="58dp" />
-    </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                android:text="My Books Listing"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:paddingTop="20dp"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.65">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/personalBookListing"
+
+                android:orientation="horizontal"
+                android:weightSum="1"
+                >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:hint= "Enter the book info"
+                    android:id="@+id/booksearch"
+                    android:ems="10"/>
+
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="match_parent"
+                    android:id="@+id/addBook"
+                    android:text="Add"
+                    android:onClick="sellBook"/>
+
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.85"
+            >
+            <ListView
+                android:id="@+id/bookListing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                 />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
 
 
     <android.support.design.widget.NavigationView

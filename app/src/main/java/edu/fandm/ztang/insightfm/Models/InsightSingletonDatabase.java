@@ -85,6 +85,8 @@ public class InsightSingletonDatabase {
     //Book Selling related variables
     private ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems;
     public boolean isReuqiredLogin = false; //used when redirecting users to login first
+    public boolean isMyBookListing = false;
+    InsightDatabaseModel.Sellingitem selectedItem;
 
 
     public boolean getSpeechCommand = false;
@@ -303,6 +305,65 @@ public class InsightSingletonDatabase {
         return inforIDlist;
     }
 
+    public ArrayList<String> getSearchResultList(){
+
+
+        ArrayList<String> resultStrings = new ArrayList<>();
+
+        for(int currentIndex = 0; currentIndex < inforIDlist.size(); currentIndex++ ){
+            if(currentIndex < searchCategoryIndex.get(0)){
+                resultStrings.add(buildings.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(1)){
+                resultStrings.add(departments.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(2)){
+                resultStrings.add(courses.get(inforIDlist.get(currentIndex)).getResourceTitle() + ": " + courses.get(inforIDlist.get(currentIndex)).getTitle());
+            }else if(currentIndex < searchCategoryIndex.get(3)){
+                resultStrings.add(sessions.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }else if(currentIndex < searchCategoryIndex.get(4)){
+                resultStrings.add(instructors.get(inforIDlist.get(currentIndex)).getResourceTitle());
+            }
+        }
+
+
+        return resultStrings;
+    }
+
+    public ArrayList<Integer> getSearchCategoryIndex() {
+        return searchCategoryIndex;
+    }
+
+    public InsightDatabaseModel.FMResource getSearchResultItem(int currentIndex){
+
+        if(currentIndex < searchCategoryIndex.get(0)){
+            return buildings.get(inforIDlist.get(currentIndex));
+        }else if(currentIndex < searchCategoryIndex.get(1)){
+            return departments.get(inforIDlist.get(currentIndex));
+        }else if(currentIndex < searchCategoryIndex.get(2)){
+            return courses.get(inforIDlist.get(currentIndex));
+        }else if(currentIndex < searchCategoryIndex.get(3)){
+            return sessions.get(inforIDlist.get(currentIndex));
+        }else{
+            return instructors.get(inforIDlist.get(currentIndex));
+        }
+    }
+
+    public InsightDatabaseModel.FMResource getSearchResultItem(int infoID, String classType){
+        if (classType.equals("Course")){
+            return getCourse(infoID);
+        }else if(classType.equals("Department")){
+            return getDepartment(infoID);
+        }else if(classType.equals("Building")){
+            return getBuilding(infoID);
+        }else if(classType.equals("Instructor")){
+            return getInstructor(infoID);
+        }else{
+            return getSession(infoID);
+        }
+    }
+
+    public InsightDatabaseModel.Sellingitem getSelectedItem() {
+        return selectedItem;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////getter methods
@@ -341,48 +402,6 @@ public class InsightSingletonDatabase {
         return currentUser;
     }
 
-    public ArrayList<String> getSearchResultList(){
-
-
-        ArrayList<String> resultStrings = new ArrayList<>();
-
-        for(int currentIndex = 0; currentIndex < inforIDlist.size(); currentIndex++ ){
-            if(currentIndex < searchCategoryIndex.get(0)){
-                resultStrings.add(buildings.get(inforIDlist.get(currentIndex)).getResourceTitle());
-            }else if(currentIndex < searchCategoryIndex.get(1)){
-                resultStrings.add(departments.get(inforIDlist.get(currentIndex)).getResourceTitle());
-            }else if(currentIndex < searchCategoryIndex.get(2)){
-                resultStrings.add(courses.get(inforIDlist.get(currentIndex)).getResourceTitle() + ": " + courses.get(inforIDlist.get(currentIndex)).getTitle());
-            }else if(currentIndex < searchCategoryIndex.get(3)){
-                resultStrings.add(sessions.get(inforIDlist.get(currentIndex)).getResourceTitle());
-            }else if(currentIndex < searchCategoryIndex.get(4)){
-                resultStrings.add(instructors.get(inforIDlist.get(currentIndex)).getResourceTitle());
-            }
-        }
-
-
-        return resultStrings;
-    }
-
-    public ArrayList<Integer> getSearchCategoryIndex() {
-        return searchCategoryIndex;
-    }
-
-    public InsightDatabaseModel.FMResource getSearchResultItem(int currentIndex){
-
-            if(currentIndex < searchCategoryIndex.get(0)){
-                return buildings.get(inforIDlist.get(currentIndex));
-            }else if(currentIndex < searchCategoryIndex.get(1)){
-                return departments.get(inforIDlist.get(currentIndex));
-            }else if(currentIndex < searchCategoryIndex.get(2)){
-                return courses.get(inforIDlist.get(currentIndex));
-            }else if(currentIndex < searchCategoryIndex.get(3)){
-                return sessions.get(inforIDlist.get(currentIndex));
-            }else{
-                return instructors.get(inforIDlist.get(currentIndex));
-            }
-    }
-
     public ArrayList<InsightDatabaseModel.Sellingitem> getAllSellingItems() {
 
         Log.d("get method", String.valueOf(this.allSellingItems.size()));
@@ -403,7 +422,9 @@ public class InsightSingletonDatabase {
         return titles;
     }
 
-    ////////////Map related
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////Map related
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Boolean isMapNeedChange(){
         return mapNeedChange;
     }
@@ -412,12 +433,124 @@ public class InsightSingletonDatabase {
         return newMapLocation;
     }
 
+    public Map<String, LatLng> getMapMarkerLATs(){
+        return mapMarkers;
+    }
+
+    private void setMapLAT(){
+
+        LatLng ADA_LAT = new LatLng(40.046112078131216,-76.31941705942154);
+        LatLng BAR_LAT = new LatLng(40.046917990535796,-76.31917834281921);
+        LatLng GOE_LAT = new LatLng(40.04497145443324,-76.32026731967926);
+        LatLng HAC_LAT = new LatLng(40.04809450914126,-76.32054224610329);
+        LatLng HAR_LAT = new LatLng(40.04785838574442,-76.31999775767326);
+        LatLng HER_LAT = new LatLng(40.04395299145577,-76.3206535577774);
+        LatLng HUE_LAT = new LatLng(40.044478651666594,-76.32042825222015);
+        LatLng KAU_LAT = new LatLng(40.04779678820205,-76.32056638598442);
+        LatLng KEI_LAT = new LatLng(40.04557923960607,-76.31954848766327);
+        LatLng LSP_LAT = new LatLng(40.04919298549468,-76.32019221782684);
+        LatLng ORT_LAT = new LatLng(40.04828135403209,-76.31578803062439);
+        LatLng ROS_LAT = new LatLng(40.047593679210486,-76.31902545690536);
+        LatLng SCC_LAT = new LatLng(40.04737603359178,-76.31957799196243);
+        LatLng STA_LAT = new LatLng(40.046096674063996,-76.31949618458748);
+        LatLng WRH_LAT = new LatLng(40.04853595503695,-76.32047116756439);
+
+        //TODO complete other buildings
+
+
+
+        mapMarkers.put("ADA", ADA_LAT);
+        mapMarkers.put("BAR", BAR_LAT);
+        mapMarkers.put("GOE", GOE_LAT);
+        mapMarkers.put("HAC", HAC_LAT);
+        mapMarkers.put("HAR", HAR_LAT);
+        mapMarkers.put("HER", HER_LAT);
+        mapMarkers.put("HUE", HUE_LAT);
+        mapMarkers.put("KAU", KAU_LAT);
+        mapMarkers.put("KEI", KEI_LAT);
+        mapMarkers.put("LSP", LSP_LAT);
+        mapMarkers.put("ORT", ORT_LAT);
+        mapMarkers.put("ROS", ROS_LAT);
+        mapMarkers.put("SCC", SCC_LAT);
+        mapMarkers.put("STA", STA_LAT);
+        mapMarkers.put("WRH", WRH_LAT);
+    }
+
+    private void setMapMarkersFullName(){
+
+        mapMarkersFullName.put("ADA200",	"Adams Auditorium, located in Hackman Hall");
+        mapMarkersFullName.put("APP",	"Appel");
+        mapMarkersFullName.put("BARGAU",	"Barshinger Center, Gault Room");
+        mapMarkersFullName.put("BARSTA",	"Barshinger Center, Stage");
+        mapMarkersFullName.put("BON",	"Bonchek College House");
+        mapMarkersFullName.put("BRO",	"Brooks College House");
+        mapMarkersFullName.put("GOE",	"Goethean Hall");
+        mapMarkersFullName.put( "HAC",	"Hackman Hall");
+        mapMarkersFullName.put( "HAR",	"Harris Center");
+        mapMarkersFullName.put("HER",	"Herman Arts");
+        mapMarkersFullName.put("JIC",	"Joseph International Center");
+        mapMarkersFullName.put("KAU",	"Kaufman Lecture Hall");
+        mapMarkersFullName.put("KEI",	"Keiper Liberal Arts"); //URL checked
+        mapMarkersFullName.put("KLE",	"Klehr Center");
+        mapMarkersFullName.put( "LSP",	"Barshinger Life Sciences & Philosophy Building");
+        mapMarkersFullName.put("NEW",	"New College House");
+        mapMarkersFullName.put( "ORT",	"Other Room Theatre (715 North Pine Street)");
+        mapMarkersFullName.put("ROS",	"Roschel Performing Arts Center");
+        mapMarkersFullName.put("SCC",	"Steinman College Center");
+        mapMarkersFullName.put("SFL",	"Shadek-Fackenthal Library");
+        mapMarkersFullName.put("STA",	"Stager Hall"); //URL checked
+        mapMarkersFullName.put("WAR",	"Ware College House");
+        mapMarkersFullName.put("WEI",	"Weis College House");
+        mapMarkersFullName.put("WOH",	"Wohlsen Center");
+        mapMarkersFullName.put("WRH",	"Writer's House");
+
+    }
+
+    public void setMapNeedChange(boolean mapNeedChange) {
+        this.mapNeedChange = mapNeedChange;
+    }
+
+    public void setNewMapLocation(LatLng newMapLocation) {
+        this.newMapLocation = newMapLocation;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////Setter Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * A private helper to create the database and search engine
+     */
+
+
+    public void setCurrentUser(InsightDatabaseModel.User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void setAllSellingItems(ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems) {
+        this.allSellingItems = allSellingItems;
+    }
+
+    public void addNewSellingItem(InsightDatabaseModel.Sellingitem newItem){
+        this.allSellingItems.add(newItem);
+        Log.d("Set method", String.valueOf(this.allSellingItems.size()));
+    }
+
+    public void updateUserToFireBase(){
+        DatabaseReference currentDatabaseREF = mFirebase.getReference();
+        currentDatabaseREF.child("Users").child(currentUser.getUserID()).setValue(currentUser);
+    }
+
+    public void setSelectedItem(InsightDatabaseModel.Sellingitem selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////Initializer methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Initialize the allsellingitems when the database is initiated
      */
     private void getCourseInfo(){
 
@@ -505,6 +638,7 @@ public class InsightSingletonDatabase {
                 InsightDatabaseModel.Session newSession = new InsightDatabaseModel.Session(Integer.valueOf(newCourseInfoList[0]), currentBuilding, newCourseInfoList[5], newCourseInfoList[6], newCourseInfoList[7], newCourseInfoList[8], currentInstructor, currentCourse);
                 newSession.setInfoID(currentSessionIndex);
                 newSession.setRecourseLocation(currentLocation);
+                currentCourse.addSession(newSession);
                 sessions.add(newSession);
                 sessionCRNTrie.insert(newCourseInfoList[0], currentSessionIndex);
                 currentSessionIndex += 1;
@@ -574,10 +708,6 @@ public class InsightSingletonDatabase {
         return Math.min(Math.min(a, b), c);
     }
 
-    public Map<String, LatLng> getMapMarkerLATs(){
-        return mapMarkers;
-    }
-
     private void setupDepartURL(){
 
         departURL = new Hashtable<String, String>();
@@ -623,107 +753,23 @@ public class InsightSingletonDatabase {
         departURL.put("WGS", "wgs");
     }
 
-    private void setMapLAT(){
-
-        LatLng ADA_LAT = new LatLng(40.046112078131216,-76.31941705942154);
-        LatLng BAR_LAT = new LatLng(40.046917990535796,-76.31917834281921);
-        LatLng GOE_LAT = new LatLng(40.04497145443324,-76.32026731967926);
-        LatLng HAC_LAT = new LatLng(40.04809450914126,-76.32054224610329);
-        LatLng HAR_LAT = new LatLng(40.04785838574442,-76.31999775767326);
-        LatLng HER_LAT = new LatLng(40.04395299145577,-76.3206535577774);
-        LatLng HUE_LAT = new LatLng(40.044478651666594,-76.32042825222015);
-        LatLng KAU_LAT = new LatLng(40.04779678820205,-76.32056638598442);
-        LatLng KEI_LAT = new LatLng(40.04557923960607,-76.31954848766327);
-        LatLng LSP_LAT = new LatLng(40.04919298549468,-76.32019221782684);
-        LatLng ORT_LAT = new LatLng(40.04828135403209,-76.31578803062439);
-        LatLng ROS_LAT = new LatLng(40.047593679210486,-76.31902545690536);
-        LatLng SCC_LAT = new LatLng(40.04737603359178,-76.31957799196243);
-        LatLng STA_LAT = new LatLng(40.046096674063996,-76.31949618458748);
-        LatLng WRH_LAT = new LatLng(40.04853595503695,-76.32047116756439);
-
-        //TODO complete other buildings
-
-
-
-        mapMarkers.put("ADA", ADA_LAT);
-        mapMarkers.put("BAR", BAR_LAT);
-        mapMarkers.put("GOE", GOE_LAT);
-        mapMarkers.put("HAC", HAC_LAT);
-        mapMarkers.put("HAR", HAR_LAT);
-        mapMarkers.put("HER", HER_LAT);
-        mapMarkers.put("HUE", HUE_LAT);
-        mapMarkers.put("KAU", KAU_LAT);
-        mapMarkers.put("KEI", KEI_LAT);
-        mapMarkers.put("LSP", LSP_LAT);
-        mapMarkers.put("ORT", ORT_LAT);
-        mapMarkers.put("ROS", ROS_LAT);
-        mapMarkers.put("SCC", SCC_LAT);
-        mapMarkers.put("STA", STA_LAT);
-        mapMarkers.put("WRH", WRH_LAT);
-    }
-
-    private void setMapMarkersFullName(){
-
-        mapMarkersFullName.put("ADA200",	"Adams Auditorium, located in Hackman Hall");
-        mapMarkersFullName.put("APP",	"Appel");
-        mapMarkersFullName.put("BARGAU",	"Barshinger Center, Gault Room");
-        mapMarkersFullName.put("BARSTA",	"Barshinger Center, Stage");
-        mapMarkersFullName.put("BON",	"Bonchek College House");
-        mapMarkersFullName.put("BRO",	"Brooks College House");
-        mapMarkersFullName.put("GOE",	"Goethean Hall");
-        mapMarkersFullName.put( "HAC",	"Hackman Hall");
-        mapMarkersFullName.put( "HAR",	"Harris Center");
-        mapMarkersFullName.put("HER",	"Herman Arts");
-        mapMarkersFullName.put("JIC",	"Joseph International Center");
-        mapMarkersFullName.put("KAU",	"Kaufman Lecture Hall");
-        mapMarkersFullName.put("KEI",	"Keiper Liberal Arts"); //URL checked
-        mapMarkersFullName.put("KLE",	"Klehr Center");
-        mapMarkersFullName.put( "LSP",	"Barshinger Life Sciences & Philosophy Building");
-        mapMarkersFullName.put("NEW",	"New College House");
-        mapMarkersFullName.put( "ORT",	"Other Room Theatre (715 North Pine Street)");
-        mapMarkersFullName.put("ROS",	"Roschel Performing Arts Center");
-        mapMarkersFullName.put("SCC",	"Steinman College Center");
-        mapMarkersFullName.put("SFL",	"Shadek-Fackenthal Library");
-        mapMarkersFullName.put("STA",	"Stager Hall"); //URL checked
-        mapMarkersFullName.put("WAR",	"Ware College House");
-        mapMarkersFullName.put("WEI",	"Weis College House");
-        mapMarkersFullName.put("WOH",	"Wohlsen Center");
-        mapMarkersFullName.put("WRH",	"Writer's House");
-
-    }
-
-    public void setMapNeedChange(boolean mapNeedChange) {
-        this.mapNeedChange = mapNeedChange;
-    }
-
-    public void setNewMapLocation(LatLng newMapLocation) {
-        this.newMapLocation = newMapLocation;
-    }
-
-    public void setCurrentUser(InsightDatabaseModel.User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public void setAllSellingItems(ArrayList<InsightDatabaseModel.Sellingitem> allSellingItems) {
-        this.allSellingItems = allSellingItems;
-    }
-
-    public void addNewSellingItem(InsightDatabaseModel.Sellingitem newItem){
-        this.allSellingItems.add(newItem);
-        Log.d("Set method", String.valueOf(this.allSellingItems.size()));
-    }
-
     private void initialzieAllSellingItems(){
         DatabaseReference bookListingRef = mFirebase.getReference("BookListing");
         bookListingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() == 0){
+                    //if there is no book on sale in the cloud database
                     allSellingItems = new ArrayList<InsightDatabaseModel.Sellingitem>();
                 }else{
                     for(DataSnapshot sellingItemSnapShot : dataSnapshot.getChildren()){
+                        //Add each book to the all selling item array
                         InsightDatabaseModel.Sellingitem newItem = sellingItemSnapShot.getValue(InsightDatabaseModel.Sellingitem.class);
                         allSellingItems.add(newItem);
+
+                        //add the new book to each course in the local database
+                        InsightDatabaseModel.Course currentCourse = getCourse(newItem.getBelongedBook().getCourseInfoID());
+                        currentCourse.addSellingitem(newItem);
                     }
                 }
             }
@@ -736,8 +782,4 @@ public class InsightSingletonDatabase {
 
     }
 
-    public void updateUserToFireBase(){
-        DatabaseReference currentDatabaseREF = mFirebase.getReference();
-        currentDatabaseREF.child("Users").child(currentUser.getUserID()).setValue(currentUser);
-    }
 }

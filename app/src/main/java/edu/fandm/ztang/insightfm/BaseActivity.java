@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.hardware.camera2.params.Face;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
@@ -125,8 +126,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         //get the user's public profile
         View headerLayout = navigationView.getHeaderView(0);
-        TextView userName = (TextView)headerLayout.findViewById(R.id.userName);
-        TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmailTitle);
+        final TextView userName = (TextView)headerLayout.findViewById(R.id.userName);
+        final TextView userEmail = (TextView)headerLayout.findViewById(R.id.userEmailTitle);
         final ImageView userProfileImage = (ImageView)headerLayout.findViewById(R.id.userProfileImage);
 
         if(mDataBase.isUserSignIn){
@@ -170,13 +171,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
                 final String userID = user.getUid();
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference currentUserInDatabase = firebaseDatabase.getReference(userID);
+                DatabaseReference currentUserInDatabase = firebaseDatabase.getReference("Users").child(userID);
                 //check if the user is already in the firebase database
                 currentUserInDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
-                            mDataBase.setCurrentUser((InsightDatabaseModel.User) dataSnapshot.getValue());
+                            mDataBase.setCurrentUser(dataSnapshot.getValue(InsightDatabaseModel.User.class));
+
+
+                            Log.d("User Written", "Success");
                         }else{
                             String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
                             if(user.getPhotoUrl() != null){
@@ -187,7 +191,51 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                             DatabaseReference FirebaseDataBaseRef = FirebaseDatabase.getInstance().getReference();
                             FirebaseDataBaseRef.child("Users").child(userID).setValue(newUser);
                             mDataBase.setCurrentUser(newUser);
+
+
+                            Log.d("User updated: ", "Updated");
                         }
+
+
+
+                        userName.setText(mDataBase.getCurrentUser().getUserDisplayedName());
+                        userEmail.setText(mDataBase.getCurrentUser().getUserEmail());
+
+
+
+
+                        Thread downloadThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+
+                                    String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
+                                    if(user.getPhotoUrl() != null){
+                                        photoURI = user.getPhotoUrl().toString();
+                                    }
+                                    URL aURL = new URL(photoURI);
+                                    URLConnection conn = aURL.openConnection();
+                                    conn.connect();
+                                    InputStream is = conn.getInputStream();
+                                    BufferedInputStream bis = new BufferedInputStream(is);
+                                    final Bitmap bm = BitmapFactory.decodeStream(bis);
+                                    bis.close();
+                                    is.close();
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            userProfileImage.setImageBitmap(bm);
+                                        }
+                                    });
+
+                                } catch (IOException e) {
+                                    Log.e(TAG, "Error getting bitmap", e);
+                                }
+                            }
+                        });
+                        downloadThread.start();
+
                     }
 
                     @Override
@@ -197,43 +245,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 });
 
 
-                userName.setText(user.getDisplayName());
-                userEmail.setText(user.getEmail());
-
-
-
-
-                Thread downloadThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            String photoURI = "http://i2.muimg.com/567571/1c07fb459f845b8c.png";
-                            if(user.getPhotoUrl() != null){
-                                photoURI = user.getPhotoUrl().toString();
-                            }
-                            URL aURL = new URL(photoURI);
-                            URLConnection conn = aURL.openConnection();
-                            conn.connect();
-                            InputStream is = conn.getInputStream();
-                            BufferedInputStream bis = new BufferedInputStream(is);
-                            final Bitmap bm = BitmapFactory.decodeStream(bis);
-                            bis.close();
-                            is.close();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    userProfileImage.setImageBitmap(bm);
-                                }
-                            });
-
-                        } catch (IOException e) {
-                            Log.e(TAG, "Error getting bitmap", e);
-                        }
-                    }
-                });
-                downloadThread.start();
 
             }else{
 
@@ -314,13 +325,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             }
 
 
-        } else if (id == R.id.nav_share) {
-
-            Intent intent = new Intent(this, EmailPasswordActivity.class);
+        } else if (id == R.id.nav_contact) {
+            Intent intent = new Intent(this, ContactsActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -333,4 +340,23 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
+
+    public void dialPhoneNumber(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + phoneNumber));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+
+    public void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 }

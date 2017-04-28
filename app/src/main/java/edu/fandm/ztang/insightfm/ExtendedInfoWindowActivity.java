@@ -10,9 +10,15 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +32,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.fandm.ztang.insightfm.Models.ExtendedInfoCourseSellingItemCustomAdapter;
+import edu.fandm.ztang.insightfm.Models.ExtendedInfoCourseSessionsCustomAdapter;
 import edu.fandm.ztang.insightfm.Models.InsightDatabaseModel;
 import edu.fandm.ztang.insightfm.Models.InsightSingletonDatabase;
 
@@ -37,15 +47,32 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
     private int inforID;    //accesscode of a particular resource arraylist
     private int position;   //index in the searchResultAccessCodesl
     private String classType;
-    private TextView infoTitle;
 
+
+    //firebase related
+    FirebaseDatabase firebaseDatabase;
 
 
 
     //UI
-    Button button1;
-    Button button2;
-    Button button3;
+    private TextView infoTitle;
+    private Button button1;
+    private Button button2;
+    private Button button3;
+
+    private View first_expandINFO_panel_courseView;
+    private View first_expandINFO_panel_buildingView;
+    private View first_expandINFO_panel_sessionView;
+    private View first_expandINFO_panel_departmentView;
+    private View first_expandINFO_panel_instructorView;
+
+    private View second_expandINFO_panel_courseView;
+    private View second_expandINFO_panel_buildingView;
+    private View second_expandINFO_panel_sessionView;
+    private View second_expandINFO_panel_departmentView;
+    private View second_expandINFO_panel_instructorView;
+
+
     Context mContext = this;
 
     //map movement related variables
@@ -64,30 +91,45 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
         //get an instance of the database
         mDatabase = InsightSingletonDatabase.getInstance(this);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
         inforID = b.getInt("INFOID");
         position = b.getInt("Position");
         classType = b.getString("ClassType");
 
-        updateButtonUI();
 
-        //set the info window's characteristic to the class type
-        TextView classTypeTextView = (TextView)findViewById(R.id.classType);
-        classTypeTextView.setText(classType);
 
+        //set uo info title
         infoTitle= (TextView)findViewById(R.id.infoTitle);
         setInfoTitle();
 
         //Fetch data from the website
         new InternetRequest().execute("https://www.fandm.edu");
 
-
-
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         updateProfile();
+
+
+        //hook up UI views
+
+        first_expandINFO_panel_courseView = findViewById(R.id.first_expandINFO_panel_course);
+        first_expandINFO_panel_buildingView = findViewById(R.id.first_expandINFO_panel_building);
+        first_expandINFO_panel_sessionView = findViewById(R.id.first_expandINFO_panel_session);
+        first_expandINFO_panel_departmentView = findViewById(R.id.first_expandINFO_panel_department);
+        first_expandINFO_panel_instructorView = findViewById(R.id.first_expandINFO_panel_instructor);
+
+        second_expandINFO_panel_courseView = findViewById(R.id.second_expandINFO_panel_course);
+        second_expandINFO_panel_buildingView = findViewById(R.id.second_expandINFO_panel_building);
+        second_expandINFO_panel_sessionView = findViewById(R.id.second_expandINFO_panel_session);
+        second_expandINFO_panel_departmentView = findViewById(R.id.second_expandINFO_panel_department);
+        second_expandINFO_panel_instructorView = findViewById(R.id.second_expandINFO_panel_instructor);
+
+        button1 = (Button)findViewById(R.id.button1);
+        button2 = (Button)findViewById(R.id.button2);
+        button3 = (Button)findViewById(R.id.button3);
+
+        updateUI();
     }
 
     private class InternetRequest  extends AsyncTask<String, Void, String>{
@@ -373,11 +415,86 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
         }
     }
 
+
+    ////////////////////////////////////////////
+    //////Update UI functions
+    ////////////////////////////////////////////
+    private void updateUI(){
+
+
+
+        if (classType.equals("Course")){
+
+            updateCourseUI();
+
+
+        }else if(classType.equals("Department")){
+
+
+        }else if(classType.equals("Building")){
+
+
+
+        }else if(classType.equals("Instructor")){
+
+
+
+        }else if(classType.equals("Session")){
+
+
+
+        }
+
+    }
+
+    private void updateCourseUI(){
+
+        //hook uo UI
+        first_expandINFO_panel_courseView.setVisibility(View.VISIBLE);
+        second_expandINFO_panel_courseView.setVisibility(View.VISIBLE);
+
+
+        //set up the session list
+        InsightDatabaseModel.Course currentCourse = mDatabase.getCourse(inforID);
+        ArrayList<InsightDatabaseModel.Session> sessions = currentCourse.getSessions();
+        ListView sessionListview = (ListView)findViewById(R.id.sessionList_listview);
+        ExtendedInfoCourseSessionsCustomAdapter adapter = new ExtendedInfoCourseSessionsCustomAdapter(mContext, sessions);
+        sessionListview.setAdapter(adapter);
+
+
+        //set up the book list
+        ArrayList<InsightDatabaseModel.Sellingitem> currentBookSellingItems = currentCourse.getSellingitems();
+
+        ExtendedInfoCourseSellingItemCustomAdapter adapter1 = new ExtendedInfoCourseSellingItemCustomAdapter(this, currentBookSellingItems);
+        ListView sellItemsListView = (ListView)findViewById(R.id.book_listview);
+        sellItemsListView.setAdapter(adapter1);
+
+    }
+
+    private void updateBuildingUI(){
+        first_expandINFO_panel_buildingView.setVisibility(View.VISIBLE);
+        second_expandINFO_panel_buildingView.setVisibility(View.VISIBLE);
+    }
+
+    private void updateDepartmentUI(){
+        first_expandINFO_panel_departmentView.setVisibility(View.VISIBLE);
+        second_expandINFO_panel_departmentView.setVisibility(View.VISIBLE);
+
+    }
+
+    private void updateSessionUI(){
+        first_expandINFO_panel_sessionView.setVisibility(View.VISIBLE);
+        second_expandINFO_panel_sessionView.setVisibility(View.VISIBLE);
+    }
+
+    private void updateInstructorUI(){
+        first_expandINFO_panel_instructorView.setVisibility(View.VISIBLE);
+        second_expandINFO_panel_instructorView.setVisibility(View.VISIBLE);
+    }
+
     private void updateButtonUI(){
 
-        button1 = (Button)findViewById(R.id.button1);
-        button2 = (Button)findViewById(R.id.button2);
-        button3 = (Button)findViewById(R.id.button3);
+
         if (classType.equals("Course")){
 
             InsightDatabaseModel.Course currentCourse = mDatabase.getCourse(inforID);
@@ -446,6 +563,8 @@ public class ExtendedInfoWindowActivity extends BaseActivity {
 
         }
     }
+
+
 
     //test
     private String fetchDataTest(){
